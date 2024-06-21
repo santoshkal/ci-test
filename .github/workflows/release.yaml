@@ -46,4 +46,4 @@ jobs:
           echo "artifact_url=oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG}" >> $GITHUB_ENV
       - name: Use artifact URL
         run: |
-          echo "echo "Artifact URL is: ${{ env.artifact_url }}"
+          echo "Artifact URL is: ${{ env.artifact_url }}"
