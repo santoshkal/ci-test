@@ -39,12 +39,9 @@ jobs:
         id: push_policies
         run: |
           GIT_TAG=${{ steps.get_tag.outputs.tag }}
-          GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
+          genval artifact push --reqinput ./dockerfile_policies \
           --dest oci://ghcr.io/santoshkal/ci-test/dockerfile_policies:${GIT_TAG} \
-          --annotations="authors=santoshdts")
-          echo "${GENVAL_OUTPUT}"
-          echo "::set-output name=artifact_url::oci://ghcr.io/santoshkal/ci-test/dockerfile_policies:${GIT_TAG}"
-
+          --annotations="authors=santoshdts"
       - name: Use artifact URL
         run: |
-          echo "Artifact URL is: ${{ steps.push_policies.outputs.artifact_url }}"
+          echo "Artifact URL is: ${{join(steps.push_policies.outputs.*,'\n')}}"
