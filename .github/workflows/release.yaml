@@ -40,10 +40,10 @@ jobs:
         run: |
           GIT_TAG=${{ steps.get_tag.outputs.tag }}
           GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
-          --dest oci://ghcr.io/santoshkal/repopolicies/dockerfile_policies:${GIT_TAG} \
+          --dest oci://ghcr.io/santoshkal/ci-test/dockerfile_policies:${GIT_TAG} \
           --annotations="authors=santoshdts")
           echo "${GENVAL_OUTPUT}"
-          echo "::set-output name=artifact_url::oci://ghcr.io/santoshkal/repopolicies/dockerfile_policies:${GIT_TAG}"
+          echo "::set-output name=artifact_url::oci://ghcr.io/santoshkal/ci-test/dockerfile_policies:${GIT_TAG}"
 
       - name: Use artifact URL
         run: |
