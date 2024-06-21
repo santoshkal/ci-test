@@ -40,7 +40,7 @@ jobs:
         run: |
           GIT_TAG=${{ steps.get_tag.outputs.tag }}
           GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
-          --dest ghcr.io/santosh1176/bookstore-api/dockerfile_policies:${GIT_TAG} \
+          --dest oci://ghcr.io/santoshkal/repopolicies/dockerfile_policies:${GIT_TAG} \
           --annotations="authors=santoshdts")
           echo "${GENVAL_OUTPUT}"
           echo "::set-output name=artifact_url::ghcr.io/intelops/policyhub/genval/dockerfile_policies:${GIT_TAG}"
