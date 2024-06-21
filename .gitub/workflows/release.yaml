@@ -1,8 +1,8 @@
 name: ci
 on:
   push:
-    branches:
-    - main
+    tags:
+      - 'v*'  # Run pn Push tag
 
 permissions:
   contents: write
