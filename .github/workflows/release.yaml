@@ -43,7 +43,7 @@ jobs:
           --dest oci://ghcr.io/santoshkal/repopolicies/dockerfile_policies:${GIT_TAG} \
           --annotations="authors=santoshdts")
           echo "${GENVAL_OUTPUT}"
-          echo "::set-output name=artifact_url::ghcr.io/intelops/policyhub/genval/dockerfile_policies:${GIT_TAG}"
+          echo "::set-output name=artifact_url::oci://ghcr.io/santoshkal/repopolicies/dockerfile_policies:${GIT_TAG}"
 
       - name: Use artifact URL
         run: |
