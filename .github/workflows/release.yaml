@@ -33,14 +33,14 @@ jobs:
 
       - name: Fetch Git tag
         id: get_tag
-        run: echo "::set-output name=tag::$(git describe --tags --abbrev=0)"
+        run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
 
       - name: Push rego policies
         id: push_policies
         run: |
-          GIT_TAG=${{ steps.get_tag.outputs.tag }}
+          GIT_TAG=${{ env.tag }}
           genval artifact push --reqinput ./dockerfile_policies \
-          --dest ghcr.io/santoshkal/ci-test/dockerfile_policies:${GIT_TAG} \
+          --dest ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
           --annotations="authors=santoshdts"
       - name: Use artifact URL
         run: |
