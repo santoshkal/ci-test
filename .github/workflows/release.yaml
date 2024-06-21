@@ -40,7 +40,7 @@ jobs:
         run: |
           GIT_TAG=${{ env.tag }}
           genval artifact push --reqinput ./dockerfile_policies \
-          --dest ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
+          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
           --annotations="authors=santoshdts"
       - name: Use artifact URL
         run: |
