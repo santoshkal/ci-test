@@ -22,7 +22,7 @@ jobs:
           cache: false
 
       - name: Install genval
-        run: go install github.com/intelops/genval@latest
+        run: go install github.com/intelops/genval@91ef4df
       
       - name: Login to Github Container Registry
         uses: docker/login-action@v2
@@ -36,5 +36,5 @@ jobs:
         id: push_policies
         run: |
             genval artifact push --reqinput ./dockerfile_policies \
-            --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:v2.0.0\
+            --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:v2.0.0 \
             --annotations="authors=santoshdts
