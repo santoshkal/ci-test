@@ -22,8 +22,8 @@ jobs:
           cache: false
 
       - name: Install genval
-        run: go install github.com/intelops/genval@fix-113
-            
+        run: go install github.com/intelops/genval@latest
+      
       - name: Login to Github Container Registry
         uses: docker/login-action@v2
         with:
@@ -31,19 +31,10 @@ jobs:
           username: ${{ github.actor }} 
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fetch Git tag
-        id: get_tag
-        run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
 
       - name: Push rego policies
         id: push_policies
         run: |
-          GIT_TAG=${{ env.tag }}
-            GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
-          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
-          --annotations="authors=santoshdts")
-          echo "${GENVAL_OUTPUT}"
-          echo "artifact_url=oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG}" >> $GITHUB_ENV
-      - name: Use artifact URL
-        run: |
-          echo "Artifact URL is: ${{ env.artifact_url }}"
+            genval artifact push --reqinput ./dockerfile_policies \
+            --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:v2.0.0\
+            --annotations="authors=santoshdts
