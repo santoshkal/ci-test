@@ -22,7 +22,7 @@ jobs:
           cache: false
 
       - name: Install genval
-        run: go install github.com/intelops/genval@v0.1.6
+        run: go install github.com/intelops/genval@fix-113
             
       - name: Login to Github Container Registry
         uses: docker/login-action@v2
