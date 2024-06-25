@@ -1,7 +1,6 @@
 name: ci
 on:
-  push:
-    - push
+  - push
     if: |
       "startsWith(github.ref, 'refs/tags/')" &&
       contains(github.event.head_commit.modified, 'dockerfile_policies/*') &&
