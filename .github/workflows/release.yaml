@@ -1,11 +1,12 @@
 name: ci
 on:
   push:
-    branches:
-      - main  # Run pn Push tag
+    - push
     if: |
       "startsWith(github.ref, 'refs/tags/')" &&
-      contains(github.event.head_commit.modified, 'dockerfile_policies/*')
+      contains(github.event.head_commit.modified, 'dockerfile_policies/*') &&
+      github.ref ==  'ref/heads/main'
+      
 permissions:
   contents: write
   security-events: write
