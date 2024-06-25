@@ -1,6 +1,6 @@
 name: ci
 on:
-  push
+  push:
     paths:
       - "dockerfile_policies/**"
     if: |
