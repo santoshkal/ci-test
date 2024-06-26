@@ -10,7 +10,7 @@ on:
     if: |
       ("startsWith(github.ref, 'refs/tags/')" &&
       "github.ref ==  'refs/heads/main'" &&
-      "contains(github.event.head_commit.modifies, 'terraform_policies/**')")
+      "contains(github.event.head_commit.modifies, 'dockerfile_policies/**')")
       
 permissions:
   contents: write
