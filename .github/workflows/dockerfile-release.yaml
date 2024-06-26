@@ -1,16 +1,10 @@
 name: ci
 on:
   push:
-    branches:
-      - main
-    paths:
-      - 'dockerfile-policies/**'
     tags:
-    - 'v*'
+      - 'v*'
     if: |
-      ${{ (startsWith(github.ref, 'refs/tags/')) &&
-       (github.ref ==  'refs/heads/main') &&
-      contains(github.event.head_commit.modified, 'dockerfile_policies/**') }}
+      ${{ contains(github.event.head_commit.modified, 'dockerfile_policies/**') }}
       
 permissions:
   contents: write
