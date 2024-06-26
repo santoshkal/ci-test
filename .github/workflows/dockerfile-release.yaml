@@ -3,8 +3,7 @@ on:
   push:
     tags:
       - 'v*'
-    if: |
-      ${{ contains(github.event.head_commit.modified, 'dockerfile_policies/**') }}
+    if: "contains(github.event.head_commit.modified, 'dockerfile_policies/**')"
       
 permissions:
   contents: write
