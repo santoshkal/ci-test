@@ -1,7 +1,7 @@
 name: ci
 on:
   push:
-  branches: 
+    branches: 
       - main
     # if: "contains(github.event.head_commit.modified, 'dockerfile_policies/**')"
       
