@@ -9,5 +9,5 @@ deny_root_user contains msg if {
     val2:= input[i].value
     val2 != "root"
     val2 != "0"
-    msg:= "Dockerfile does not support root user"
+    msg:= "Ensure Dockerfile does not use root user"
 }
