@@ -45,7 +45,7 @@ jobs:
         # if: "contains(github.event.commit.modified, 'dockerfile_policies/**')"
 
         run: |
-          echo '${{ toJSON(github.event.commit.modified) }}'
+          echo '${{ toJSON(github.event.commits.modified[*]) }}'
         # run: |
         #   GIT_TAG=${{ env.tag }}
         #     GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
