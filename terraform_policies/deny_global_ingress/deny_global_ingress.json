@@ -5,6 +5,6 @@
   "severity": "High",
   "Description": "Ensure AWS security group does not allow ingress from 0.0.0.0/0",
   "Benchmark": "TBD",
-  "Category": "Infrastructure security"
+  "Category": "Infrastructure Network security"
 }
 
