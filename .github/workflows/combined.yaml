@@ -45,11 +45,11 @@ jobs:
         # if: "contains(github.event.commit.modified, 'dockerfile_policies/**')"
 
         run: |
-          echo '${{ toJSON(github.event.commits.modified[*]) }}'
+          echo '${{ toJSON(github.event.commits[0].modified[*]) }}'
         # run: |
         #   GIT_TAG=${{ env.tag }}
         #     GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
         #   --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
         #   --annotations="authors=santoshdts")
         #   echo "${GENVAL_OUTPUT}"
-        #   echo "dockerfile_artifact_url=oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG}" >> $GITHUB_ENV
+        #   echo "dockerfile_artifact_url=oci://ghcr.io/st antoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG}" >> $GITHUB_ENV
