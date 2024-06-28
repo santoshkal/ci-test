@@ -17,14 +17,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-go@v4
-        with:
-          go-version: '1.22'
-          cache: false
+      # - uses: actions/setup-go@v4
+      #   with:
+      #     go-version: '1.22'
+      #     cache: false
       
-      - name: Install genval
-        run: go install github.com/intelops/genval@91ef4df
-            
+      # - name: Install genval
+      #   run: go install github.com/intelops/genval@91ef4df
+      #       
       - name: Login to Github Container Registry
         uses: docker/login-action@v2
         with:
@@ -40,12 +40,12 @@ jobs:
         id: get_tag
         run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
 
-      - name: Push Dockerfile policies
+      - name: Check Commit Details
         id: push_dockerfile_policies
         # if: "contains(github.event.commit.modified, 'dockerfile_policies/**')"
 
         run: |
-          echo ${{ toJSON(github.event.commit.modified) }}
+          echo '${{ toJSON(github.event.commit.modified) }}'
         # run: |
         #   GIT_TAG=${{ env.tag }}
         #     GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
