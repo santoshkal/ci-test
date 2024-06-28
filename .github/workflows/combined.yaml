@@ -32,37 +32,24 @@ jobs:
           username: ${{ github.actor }} 
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Print jq version
+        run: jq --version
+        
+
       - name: Fetch Git tag
         id: get_tag
         run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
 
       - name: Push Dockerfile policies
         id: push_dockerfile_policies
-        if: "contains(github.event.head_commit.modified, 'dockerfile_policies/**')"
-        run: |
-          GIT_TAG=${{ env.tag }}
-            GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
-          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
-          --annotations="authors=santoshdts")
-          echo "${GENVAL_OUTPUT}"
-          echo "dockerfile_artifact_url=oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG}" >> $GITHUB_ENV
+        if: "contains(github.event.commit.modified, 'dockerfile_policies/**')"
 
-      - name: Use DOckerfile artifact URL
         run: |
-          echo "DOckerfile artifact URL is: ${{ env.dockerfile_artifact_url }}"
-
-      - name: Push Terraform policies
-        id: push_terraform_policies
-        if: "contains(github.event.head_commit.modified, 'terraform_policies/**')"
-        run: |
-          GIT_TAG=${{ env.tag }}
-            GENVAL_OUTPUT=$(genval artifact push --reqinput ./terraform_policies \
-          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/terraform_policies:${GIT_TAG} \
-          --annotations="authors=santoshdts")
-          echo "${GENVAL_OUTPUT}"
-          echo "terraform_artifact_url=oci://ghcr.io/santoshkal/ci-test/artifcts/terraform_policies:${GIT_TAG}" >> $GITHUB_ENV
-
-
-      - name: Use artifact URL
-        run: |
-          echo "Artifact URL is: ${{ env.terrraform_artifact_url }}"
+          echo ${{ tpJSON(github.event.commit.modified) }}
+        # run: |
+        #   GIT_TAG=${{ env.tag }}
+        #     GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
+        #   --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
+        #   --annotations="authors=santoshdts")
+        #   echo "${GENVAL_OUTPUT}"
+        #   echo "dockerfile_artifact_url=oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG}" >> $GITHUB_ENV
