@@ -9,5 +9,5 @@ deny_global_ingress contains msg if {
 	denied_cidr := "0.0.0.0/0"
 	global := ing.cidr_blocks[_]
 	not contains(global, denied_cidr)
-	msg:= "Security group does not ingress from all IPv4 addresses "
+	msg:= "Security group does not allow ingress from all IPv4 addresses "
 }
