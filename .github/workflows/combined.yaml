@@ -1,8 +1,8 @@
 name: ci
 on:
   push:
-    tags:
-      - 'v*'
+  branches: 
+      - main
     # if: "contains(github.event.head_commit.modified, 'dockerfile_policies/**')"
       
 permissions:
@@ -45,7 +45,7 @@ jobs:
         if: "contains(github.event.commit.modified, 'dockerfile_policies/**')"
 
         run: |
-          echo ${{ tpJSON(github.event.commit.modified) }}
+          echo ${{ toJSON(github.event.commit.modified) }}
         # run: |
         #   GIT_TAG=${{ env.tag }}
         #     GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
