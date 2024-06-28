@@ -42,7 +42,7 @@ jobs:
 
       - name: Push Dockerfile policies
         id: push_dockerfile_policies
-        if: "contains(github.event.commit.modified, 'dockerfile_policies/**')"
+        # if: "contains(github.event.commit.modified, 'dockerfile_policies/**')"
 
         run: |
           echo ${{ toJSON(github.event.commit.modified) }}
