@@ -1,55 +1,21 @@
-name: ci
-on:
+name: Print GitHub Event Payload
+
+on: 
   push:
-    tags: 
-      - 'v*'
-    # if: "contains(github.event.head_commit.modified, 'dockerfile_policies/**')"
-      
-permissions:
-  contents: write
-  security-events: write
-  # Optional: allow read access to pull request. Use with `only-new-issues` option.
-  packages: write
 
 jobs:
-  push-artifacts:
-    name: CI
+  print-event:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v4
-        with:
-          go-version: '1.22'
-          cache: false
-      # 
-      - name: Install genval
-        run: go install github.com/intelops/genval@91ef4df
-      #       
-      - name: Login to Github Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }} 
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-
-      - name: Fetch Git tag
-        id: get_tag
-        run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
-
-      - name: Check  updates to Push Terraform
-        uses: dorny/paths-filter@v3
-        id: udpates_terraform_policies
-        with:
-          filters: |
-            src: 'terraform_policies/**'
-      - name: Push Terraform Policies
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Print GitHub event payload
         run: |
-          if: steps.updates_terraform_policies.outputs.src ==  true
-          GIT_TAG=${{ env.tag }}
-            GENVAL_OUTPUT=$(genval artifact push --reqinput ./terraform_policies \
-          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/terraform_policies:${GIT_TAG} \
-          --annotations="authors=santoshdts")
-          echo "${GENVAL_OUTPUT}"
-          echo "terraform_artifact_url=oci://ghcr.io/santoshkal/ci-test/artifcts/terraform_policies:${GIT_TAG}" >> $GITHUB_ENV
-
+          echo "GitHub Event Payload:"
+          echo '${{ toJson(github.event) }}' | jq '.'
+          
+      - name: Print modified files
+        run: |
+          echo "Modified files:"
+          echo '${{ toJson(github.event) }}' | jq '.commits[].modified'
