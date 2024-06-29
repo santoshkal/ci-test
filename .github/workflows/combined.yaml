@@ -38,6 +38,7 @@ jobs:
         run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
 
       - name: Check Updates to Dockerfiles
+        uses: dorny/paths-filter@v3
         id: udpates_dockerfile_policies
         with:
           filters: |
