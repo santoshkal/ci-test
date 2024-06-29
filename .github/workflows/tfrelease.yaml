@@ -37,13 +37,14 @@ jobs:
         id: get_tag
         run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
 
-      - name: Push Terraform
-        id: push_terraform_policies
+      - name: Check  updates to Push Terraform
+        id: udpates_terraform_policies
         with:
           filters: |
             src: 'terraform_policies/**'
+      - name: Push Terraform Policies
         run: |
-          if: steps.push_terraform_policies.outputs.src ==  true
+          if: steps.updates_terraform_policies.outputs.src ==  true
           GIT_TAG=${{ env.tag }}
             GENVAL_OUTPUT=$(genval artifact push --reqinput ./terraform_policies \
           --dest oci://ghcr.io/santoshkal/ci-test/artifcts/terraform_policies:${GIT_TAG} \

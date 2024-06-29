@@ -37,13 +37,14 @@ jobs:
         id: get_tag
         run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
 
-      - name: Push Dockerfiles
-        id: push_dockerfile_policies
+      - name: Check Updates to Dockerfiles
+        id: udpates_dockerfile_policies
         with:
           filters: |
             src: 'dockerfile_policies/**'
+      - name: Push Dockerfile Policies
         run: |
-          if: steps.push_dockerfile_policies.outputs.src ==  true
+          if: steps.updates_dockerfile_policies.outputs.src ==  true
           GIT_TAG=${{ env.tag }}
             GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies/ \
           --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \

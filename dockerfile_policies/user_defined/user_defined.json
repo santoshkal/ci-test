@@ -3,7 +3,7 @@
   "policy_file": "user_defined.rego",
   "policy_name": "user_defined",
   "severity": "High",
-  "Description": "Ensure that a user for the container has been created",
+  "Description": "Ensure that a USER instrction for the container has been created",
   "Benchmark": "CIS-4.1",
   "Category": "Infrastructure security"
 }
