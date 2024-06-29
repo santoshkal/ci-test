@@ -42,10 +42,10 @@ jobs:
         with:
           filters: |
             src: 'dockerfile_policies/**'
-        if: steps.push_dockerfile_policies.outputs.src ==  true
         run: |
+          if: steps.push_dockerfile_policies.outputs.src ==  true
           GIT_TAG=${{ env.tag }}
-            GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
+            GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies/ \
           --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
           --annotations="authors=santoshdts")
           echo "${GENVAL_OUTPUT}"

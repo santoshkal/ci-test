@@ -42,8 +42,8 @@ jobs:
         with:
           filters: |
             src: 'terraform_policies/**'
-        if: steps.push_terraform_policies.outputs.src ==  true
         run: |
+          if: steps.push_terraform_policies.outputs.src ==  true
           GIT_TAG=${{ env.tag }}
             GENVAL_OUTPUT=$(genval artifact push --reqinput ./terraform_policies \
           --dest oci://ghcr.io/santoshkal/ci-test/artifcts/terraform_policies:${GIT_TAG} \
