@@ -37,16 +37,17 @@ jobs:
         id: get_tag
         run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
 
-      - name: Push Dockerfiles
-        id: push_dockerfile_policies
+      - name: Push Terraform
+        id: push_terraform_policies
         with:
           filters: |
-            src: 'dockerfile_policies/**'
-        if: steps.push_dockerfile_policies.outputs.src ==  true
+            src: 'terraform_policies/**'
+        if: steps.push_terraform_policies.outputs.src ==  true
         run: |
           GIT_TAG=${{ env.tag }}
-            GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
-          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
+            GENVAL_OUTPUT=$(genval artifact push --reqinput ./terraform_policies \
+          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/terraform_policies:${GIT_TAG} \
           --annotations="authors=santoshdts")
           echo "${GENVAL_OUTPUT}"
-          echo "dockerfile_artifact_url=oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG}" >> $GITHUB_ENV
+          echo "terraform_artifact_url=oci://ghcr.io/santoshkal/ci-test/artifcts/terraform_policies:${GIT_TAG}" >> $GITHUB_ENV
+
