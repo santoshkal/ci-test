@@ -18,4 +18,4 @@ jobs:
       - name: Print modified files
         run: |
           echo "Modified files:"
-          echo '${{ toJson(github.event.head_commit.modified) }}' | jq '.commits[].modified'
+          echo '${{ toJson(github.event.commits) }}' | jq '.commits[].modified'
