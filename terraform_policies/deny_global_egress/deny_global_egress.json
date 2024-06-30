@@ -4,6 +4,6 @@
   "policy_name": "deny_global_egress",
   "severity": "Low",
   "Description": "Ensure AWS security group does not allow egress from internet",
-  "Benchmark": "ABC",
+  "Benchmark": "XYZ",
   "Category": "Infrastructure Network security"
 }
