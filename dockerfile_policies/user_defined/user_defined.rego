@@ -7,5 +7,5 @@ import rego.v1
 # CIS 4.1 Ensure that a user for the container has been created
 user_defined contains msg if{
   input[i].cmd == "user"
-  msg:= "Ensure that a USER for the container has been created"
+  msg:= "Ensure that a USER instruction is used for the container"
 }
