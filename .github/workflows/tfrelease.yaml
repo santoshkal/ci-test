@@ -4,8 +4,9 @@ on:
   push:
     paths:
       - dockerfile_policies/**
-    tags:
-      - "v*"
+    branches:
+      - main
+
 permissions:
   contents: write # needed to write releases
   id-token: write # needed for keyless signing
@@ -41,6 +42,7 @@ jobs:
 
       - name: Push Dockerfile policies
         id: push_dockerfile_policies
+        if: "startsWith(github.event.ref, 'refs/tags/v')"
         run: |
           GIT_TAG=${{ env.tag }}
             GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
