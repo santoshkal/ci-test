@@ -52,8 +52,6 @@ jobs:
         id: push_dockerfile_policies
         run: |
           GIT_TAG=${{ env.tag }}
-            GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
+          genval artifact push --reqinput ./dockerfile_policies/ \
           --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
-          --annotations="authors=santoshdts")
-          echo "${GENVAL_OUTPUT}"
-          echo "dockerfile_artifact_url=oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG}" >> $GITHUB_ENV
+          --annotations="authors=santoshdts"
