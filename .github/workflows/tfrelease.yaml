@@ -37,8 +37,9 @@ jobs:
       - name: Check Path
         uses: yumemi-inc/path-filter@v2
         id: check_path
-        with: |
-          'dockefile_policies/**'
+        with:
+          patterns: |
+            'dockefile_policies/**'
 
       - name: Fetch Git tag
         id: get_tag
