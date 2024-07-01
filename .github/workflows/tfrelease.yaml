@@ -2,6 +2,8 @@ name: CI Workflow
 
 on:
   push:
+    branches:
+      - main
     paths:
       - dockerfile_policies/**
     tags:
