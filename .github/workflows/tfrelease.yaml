@@ -37,7 +37,7 @@ jobs:
       - name: Check for changes in dockerfile_policies
         id: check_conditions
         run: |
-          CHANGED_FILES=$(git diff --name-only | grep -E '^dockerfile_policies/')
+          CHANGED_FILES=$(git diff --name-only origin| grep -E '^dockerfile_policies/')
           if [[ -z "$CHANGED_FILES" ]]; then
             echo "No changes in the specified paths. Exiting."
             exit 1
