@@ -2,8 +2,8 @@ name: CI Workflow
 
 on:
   push:
-    tags:
-      - "v*"
+    paths:
+      - dockerfile_policies/**
 
 permissions:
   contents: write # needed to write releases
@@ -13,6 +13,7 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    if: "startsWith(github.ref, 'refs/tags/v')"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
@@ -29,29 +30,11 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Get context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
 
-      - name: Check Path
-        uses: yumemi-inc/path-filter@v2
-        id: check_path
-        with:
-          patterns: |
-            dockerfile_policies/**
-
-      - name: Fetch Git tag
-        id: get_tag
-        run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
-
-      - name: print check_path
-        run: echo "outputs ${{ steps.chack_path.outputs }}"
       - name: Push Dockerfile policies
-        if: steps.check_path.outputs.exists ==  'true'
         id: push_dockerfile_policies
         run: |
           GIT_TAG=${{ env.tag }}
           genval artifact push --reqinput ./dockerfile_policies/ \
-          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
+          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${{ github.ref }} \
           --annotations="authors=santoshdts"
