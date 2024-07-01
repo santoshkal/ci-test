@@ -2,10 +2,6 @@ name: CI Workflow
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - dockerfile_policies/**
     tags:
       - "v*"
 
@@ -38,13 +34,19 @@ jobs:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
         run: echo "$GITHUB_CONTEXT"
 
+      - name: Check Path
+        uses: yumemi-inc/path-filter@v2
+        id: check_path
+        with: |
+          'dockefile_policies/**'
+
       - name: Fetch Git tag
         id: get_tag
         run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
 
       - name: Push Dockerfile policies
+        if: steps.check_path.outputs.exists ==  'true'
         id: push_dockerfile_policies
-        if: "startsWith(github.event.ref, 'refs/tags/v')"
         run: |
           GIT_TAG=${{ env.tag }}
             GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
