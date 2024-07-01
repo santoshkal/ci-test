@@ -20,7 +20,12 @@ jobs:
         with:
           go-version: "1.22"
           cache: false
-
+      - name: Set Env
+        run: echo "GIT_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+      - name: Check version
+        run: |
+          echo $GIT_TAG
+          echo ${{ env.GIT_TAG }}
       - name: Install genval
         run: go install github.com/intelops/genval@main
 
@@ -36,5 +41,5 @@ jobs:
         run: |
           GIT_TAG=${{ env.tag }}
           genval artifact push --reqinput ./dockerfile_policies/ \
-          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${{ github.ref }} \
+          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
           --annotations="authors=santoshdts"
