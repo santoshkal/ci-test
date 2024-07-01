@@ -11,5 +11,5 @@ deny_caching contains msg if {
     matches := regex.match(".*?(apk|yum|dnf|apt|pip).+?(install|[dist-|check-|group]?up[grade|date]).*", val4)
     matches == true
     contains(val4, "--no-cache")
-    msg:= "Ensure Dockerfile invalidates cache when installing dependencies"
+    msg:= "Ensure invalidates cache when installing dependencies"
 }
