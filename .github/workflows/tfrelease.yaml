@@ -2,10 +2,10 @@ name: CI Workflow
 
 on:
   push:
-    tags:
-      - "v*"
     paths:
       - dockerfile_policies/**
+    tags:
+      - "v*"
 permissions:
   contents: write # needed to write releases
   id-token: write # needed for keyless signing
@@ -36,7 +36,6 @@ jobs:
         run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
 
       - name: Push Dockerfile policies
-        if: "startsWith(github.ref, 'refs/tags/v')"
         id: push_dockerfile_policies
         run: |
           GIT_TAG=${{ env.tag }}

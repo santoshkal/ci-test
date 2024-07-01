@@ -4,6 +4,6 @@
   "policy_name": "deny_global_ingress",
   "severity": "High",
   "Description": " AWS security group does not allow ingress from 0.0.0.0/0",
-  "Benchmark": "ABC",
-  "Category": "Infrastructure Network security"
+  "Benchmark": "XYZZZZ",
+  "Category": "Infrastructure Network guardrails"
 }
