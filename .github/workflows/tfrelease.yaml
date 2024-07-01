@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - "dockerfile_policies/**"
+    tags:
+      - "v*"
 
 jobs:
   push-artifacts:
@@ -32,12 +34,12 @@ jobs:
         id: get_tag
         run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
 
-      - name: Check for changes and tag push
+      - name: Check for changes in dockerfile_policies
         id: check_conditions
         run: |
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
-          if [[ -z "$CHANGED_FILES" || ! $(echo "$CHANGED_FILES" | grep -E '^dockerfile_policies/') ]]; then
-            echo "No changes in the specified paths or not a valid tag push. Exiting."
+          CHANGED_FILES=$(git diff --name-only | grep -E '^dockerfile_policies/')
+          if [[ -z "$CHANGED_FILES" ]]; then
+            echo "No changes in the specified paths. Exiting."
             exit 1
           fi
 
@@ -46,6 +48,8 @@ jobs:
         id: push_dockerfile_policies
         run: |
           GIT_TAG=${{ env.tag }}
-          genval artifact push --reqinput ./dockerfile_policies/ \
+          GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
             --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
-            --annotations="authors=santoshdts"
+            --annotations="authors=santoshdts")
+          echo "${GENVAL_OUTPUT}"
+          echo "dockerfile_artifact_url=oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG}" >> $GITHUB_ENV
