@@ -39,7 +39,7 @@ jobs:
         id: check_path
         with:
           patterns: |
-            dockefile_policies/**
+            dockerfile_policies/**
 
       - name: Fetch Git tag
         id: get_tag
