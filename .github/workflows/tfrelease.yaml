@@ -4,8 +4,8 @@ on:
   push:
     paths:
       - dockerfile_policies/**
-    branches:
-      - main
+    tags:
+      - "v*"
 
 permissions:
   contents: write # needed to write releases
