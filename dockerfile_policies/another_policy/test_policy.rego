@@ -5,4 +5,4 @@
       uses: mathieudutour/github-tag-action@v6.2
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        default_bump: patch
+        t default_bump: patch
