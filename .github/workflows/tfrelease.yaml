@@ -28,6 +28,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Fetch Git tag
+        id: get_tag
+        run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
       - name: Chck path
         id: filter
         uses: dorny/paths-filter@v3
@@ -36,15 +40,11 @@ jobs:
             src:
               - 'dockerfile_policies/**'
 
-      - name: Fetch Git tag
-        id: get_tag
-        run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
-
       - name: Push Dockerfile policies
         if: steps.filter.outputs.src ==  'true'
         id: push_dockerfile_policies
         run: |
           GIT_TAG=${{ env.tag }}
-          genval artifact push --reqinput ./dockerfile_policies \
+          genval artifact push --reqinput ./dockerfile_policies/ \
             --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
             --annotations="authors=santoshdts"
