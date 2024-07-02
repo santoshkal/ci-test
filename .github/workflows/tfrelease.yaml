@@ -38,7 +38,7 @@ jobs:
           filters: |
             with:
               dockerfile_policies:
-                - 'dockerfile_policies/**'
+                - added|modified: 'dockerfile_policies/**'
 
       - name: Push Dockerfile policies
         if: steps.filter.outputs.src ==  'true'
