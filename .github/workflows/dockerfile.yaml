@@ -33,7 +33,6 @@ jobs:
       - uses: dorny/paths-filter@v3
         id: filter
         with:
-          base: main
           filters: |
             dockerfile:
               - added|modified: 'dockerfile_policies/**'
