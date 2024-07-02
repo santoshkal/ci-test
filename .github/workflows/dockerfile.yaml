@@ -1,4 +1,4 @@
-name: Terraform Workflow
+name: CI Workflow
 
 on:
   push:
@@ -35,14 +35,14 @@ jobs:
         with:
           base: main
           filters: |
-            terraform:
-              - added|modified: 'terraform_policies/**'
+            dockerfile:
+              - added|modified: 'dockerfile_policies/**'
 
       - name: Push Dockerfile policies
-        if: ${{ steps.filter.outputs.terraform ==  'true' }}
+        if: ${{ steps.filter.outputs.dockerfile ==  'true' }}
         id: push_dockerfile_policies
         run: |
           GIT_TAG=${{ env.tag }}
-          genval artifact push --reqinput ./terraform_policies/ \
-            --dest oci://ghcr.io/santoshkal/ci-test/artifcts/terraform_policies:${GIT_TAG} \
+          genval artifact push --reqinput ./dockerfile_policies/ \
+            --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
             --annotations="authors=santoshdts"
