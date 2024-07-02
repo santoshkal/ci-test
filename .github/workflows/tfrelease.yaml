@@ -37,7 +37,7 @@ jobs:
         with:
           filters: |
             with:
-              src:
+              dockerfile_policies:
                 - 'dockerfile_policies/**'
 
       - name: Push Dockerfile policies
