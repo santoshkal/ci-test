@@ -33,7 +33,7 @@ jobs:
       - uses: dorny/paths-filter@v3
         id: filter
         with:
-          base: HEAD^
+          base: "v*"
           filters: |
             terraform:
               - added|modified: 'terraform_policies/**'
