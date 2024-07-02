@@ -2,8 +2,8 @@ name: CI Workflow
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - main
 
 jobs:
   push-artifacts:
@@ -26,14 +26,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fetch Git tag
-        id: get_tag
-        run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
-
       - uses: dorny/paths-filter@v3
         id: filter
         with:
-          base: "v*"
           filters: |
             dockerfile:
               - added|modified: 'dockerfile_policies/**'
@@ -42,7 +37,6 @@ jobs:
         if: ${{ steps.filter.outputs.dockerfile ==  'true' }}
         id: push_dockerfile_policies
         run: |
-          GIT_TAG=${{ env.tag }}
           genval artifact push --reqinput ./dockerfile_policies/ \
-            --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
+            --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:v0.0.58 \
             --annotations="authors=santoshdts"
