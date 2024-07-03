@@ -40,7 +40,6 @@ jobs:
           WITH_V: true
           RELEASE_BRANCHES: "main"
           DEFAULT_BUMP: "patch"
-          DRY_RUN: true
 
       - name: Get new tag
         run: echo "tag=${{ steps.tag_version.outputs.new_tag }}" >> $GITHUB_ENV
