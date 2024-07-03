@@ -5,7 +5,7 @@ on:
     branches:
       - prod
     paths:
-      - terraform_policies/**"
+      - terraform_policies/*/**"
 
 permissions:
   contents: write # needed to write releases
@@ -38,7 +38,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
-          RELEASE_BRANCHES: "prod"
+          RELEASE_BRANCHES: "main"
           DEFAULT_BUMP: "patch"
           DRY_RUN: true
 
