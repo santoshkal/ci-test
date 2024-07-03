@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "dockerfile_policies/*/**"
+      - "dockerfile_policies/**"
 
 permissions:
   contents: write # needed to write releases
