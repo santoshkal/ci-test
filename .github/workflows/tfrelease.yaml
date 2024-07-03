@@ -39,7 +39,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           RELEASE_BRANCHES: "prod"
-          DEFAULT_BUNP: "patch"
+          DEFAULT_BUMP: "patch"
           DRY_RUN: true
 
       - name: Get new tag
