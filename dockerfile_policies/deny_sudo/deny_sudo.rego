@@ -8,5 +8,5 @@ deny_sudo contains msg if {
     input[i].cmd == "run"
     val3:= input[i].value
     not contains(val3, "sudo")
-    msg:= "Ensure Dockerfile does not support sudo"
+    msg:= "Dockerfile does not support sudo"
 }
