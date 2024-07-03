@@ -5,7 +5,7 @@ on:
     branches:
       - prod
     paths:
-      - terraform_policies/**"
+      - "terraform_policies/**"
 
 permissions:
   contents: write # needed to write releases
