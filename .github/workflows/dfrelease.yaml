@@ -30,7 +30,7 @@ jobs:
       - name: Fetch Initial version
         id: init_version
         run: |
-          ./.github/workflows/get-version.sh
+          ./.github/workflows/get_version.sh
 
       - name: Set Init-Version
         run: |
