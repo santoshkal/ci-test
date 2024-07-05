@@ -33,6 +33,7 @@ jobs:
           ./.github/workflows/get_version.sh
 
       - name: Set Init-Version
+        id: set_init_version
         run: |
           echo "INIT_TAG=${{ steps.init_version.outputs.new_version }}"
 
