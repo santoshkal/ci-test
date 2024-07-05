@@ -52,6 +52,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # INITIAL_VERSION: ${{ env.INIT_TAG }}
+          DEFAULT_BRANCH: terraform-policies
           WITH_V: true
           RELEASE_BRANCHES: "terraform-policies"
           DEFAULT_BUMP: "patch"

@@ -24,17 +24,17 @@ jobs:
           go-version: "1.22"
           cache: false
 
-      - name: Fetch Initial version
-        id: init_version
-        run: |
-          ./.github/workflows/get_version.sh
-
-      - name: Set Init-Version
-        id: set_init_version
-        run: echo "INIT_TAG=${{ steps.init_version.outputs.new_version }}" >> $GITHUB_ENV
-
-      - name: Check Init Version
-        run: echo "Init tag ${{ env.INIT_TAG }}"
+      # - name: Fetch Initial version
+      #   id: init_version
+      #   run: |
+      #     ./.github/workflows/get_version.sh
+      #
+      # - name: Set Init-Version
+      #   id: set_init_version
+      #   run: echo "INIT_TAG=${{ steps.init_version.outputs.new_version }}" >> $GITHUB_ENV
+      #
+      # - name: Check Init Version
+      #   run: echo "Init tag ${{ env.INIT_TAG }}"
 
       - name: Install genval
         run: go install github.com/intelops/genval@main
@@ -51,7 +51,8 @@ jobs:
         uses: anothrNick/github-tag-action@1.67.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INITIAL_VERSION: ${{ env.INIT_TAG }}
+          DEFAULT_BRANCH: dockerfile-policies
+          # INITIAL_VERSION: ${{ env.INIT_TAG }}
           WITH_V: true
           RELEASE_BRANCHES: "dockerfile-policies"
           DEFAULT_BUMP: "patch"
