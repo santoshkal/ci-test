@@ -28,7 +28,7 @@ jobs:
         run: go install github.com/intelops/genval@main
 
       - name: Check PWD
-        run: ${pwd}
+        run: echo "I am here ${pwd}"
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
