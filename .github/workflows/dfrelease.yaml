@@ -27,6 +27,15 @@ jobs:
       - name: Check PWD
         run: echo "I am here $(pwd)"
 
+      - name: Fetch Initial version
+        id: init_version
+        run: |
+          ./.github/workflows/get-version.sh
+
+      - name: Set Init-Version
+        run: |
+          echo "INIT_TAG=${{ steps.init_version.outputs.new_version }}"
+
       - name: Install genval
         run: go install github.com/intelops/genval@main
       - name: Genval version
@@ -47,6 +56,7 @@ jobs:
           WITH_V: true
           RELEASE_BRANCHES: "main"
           DEFAULT_BUMP: "patch"
+          INITIAL_VERSION: ${INIT_TAG}
 
       - name: Get new tag
         run: echo "tag=${{ steps.tag_version.outputs.new_tag }}" >> $GITHUB_ENV
