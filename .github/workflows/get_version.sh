@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set the working directory
-WORKING_DIR="$HOME/ci-test/dockerfile_policies"
+WORKING_DIR="./dockerfile_policies"
 
 # Navigate to the directory containing the version.env file
 cd "$WORKING_DIR" || { echo "Failed to navigate to $WORKING_DIR"; exit 1; }
