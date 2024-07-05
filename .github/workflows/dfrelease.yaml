@@ -3,7 +3,7 @@ name: Dockerfile Workflow
 on:
   push:
     branches:
-      - main
+      - dockerfile-policies
     paths:
       - "dockerfile_policies/**"
 
@@ -53,8 +53,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           INITIAL_VERSION: ${{ env.INIT_TAG }}
           WITH_V: true
-          RELEASE_BRANCHES: "main"
+          RELEASE_BRANCHES: "dockerfile-policies"
           DEFAULT_BUMP: "patch"
+          TAG_CONTEXT: branch
 
       - name: Get new tag
         run: echo "tag=${{ steps.tag_version.outputs.new_tag }}" >> $GITHUB_ENV
