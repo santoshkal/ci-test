@@ -56,7 +56,7 @@ jobs:
           WITH_V: true
           RELEASE_BRANCHES: "main"
           DEFAULT_BUMP: "patch"
-          INITIAL_VERSION: ${INIT_TAG}
+          INITIAL_VERSION: ${{ steps.set_init_version.outputs.INIT_TAG }}
 
       - name: Get new tag
         run: echo "tag=${{ steps.tag_version.outputs.new_tag }}" >> $GITHUB_ENV
