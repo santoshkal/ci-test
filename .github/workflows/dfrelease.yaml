@@ -34,13 +34,12 @@ jobs:
 
       - name: Set Init-Version
         id: set_init_version
-        run: |
-          echo "INIT_TAG=${{ steps.init_version.outputs.new_version }}"
+        run: echo "INIT_TAG=${{ steps.init_version.outputs.new_version }}"
+        env:
+          INIT_TAG: ${{ steps.init_version.outputs.new_version }}
 
       - name: Install genval
         run: go install github.com/intelops/genval@main
-      - name: Genval version
-        run: echo "genval version"
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -57,7 +56,7 @@ jobs:
           WITH_V: true
           RELEASE_BRANCHES: "main"
           DEFAULT_BUMP: "patch"
-          INITIAL_VERSION: ${{ steps.set_init_version.outputs.INIT_TAG }}
+          INITIAL_VERSION: ${{ env.INIT_TAG }}
 
       - name: Get new tag
         run: echo "tag=${{ steps.tag_version.outputs.new_tag }}" >> $GITHUB_ENV
