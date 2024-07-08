@@ -70,6 +70,7 @@ jobs:
           --annotations="authors=santoshdts")
           echo "${GENVAL_OUTPUT}"
           echo "artifact_url=oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG}" >> $GITHUB_ENV
+          echo "${{ env.artifact_url }}"
 
       - name: Write policy URL
         uses: "DamianReeves/write-file-action@master"
