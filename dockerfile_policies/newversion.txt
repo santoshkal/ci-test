@@ -1,0 +1,1 @@
+ artifact_url: oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:0.0.1
