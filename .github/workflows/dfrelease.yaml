@@ -70,4 +70,4 @@ jobs:
             --annotations="authors=santoshdts"
 
       - name: Check push outputs
-        run: echo "${{ steps.push_dockerfile_policies.oytputs }}"
+        run: echo "${{ steps.push_dockerfile_policies.outputs }}"
