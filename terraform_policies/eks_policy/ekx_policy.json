@@ -2,5 +2,6 @@
   "name": "test",
   "Test": "new version",
   "New test": "Default Branch```",
-  "Check-output": "test"
+  "Check-output": "test",
+  "new": "new"
 }
