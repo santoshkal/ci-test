@@ -70,4 +70,6 @@ jobs:
             --annotations="authors=santoshdts"
 
       - name: Check push outputs
-        run: echo "${{ steps.push_dockerfile_policies.outputs }}" > ./dockerfile_policies/vewversion.txt
+        run: |
+          touch ./dockerfile_policies/upodatedVersion.txt
+          echo "${{ steps.push_dockerfile_policies.outputs }}" >> ./dockerfile_policies/updatedVersion.txt
