@@ -1,5 +1,6 @@
 {
   "name": "test",
   "Test": "new version",
-  "New test": "Default Branch```"
+  "New test": "Default Branch```",
+  "Check-output": "test"
 }
