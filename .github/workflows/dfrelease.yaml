@@ -71,5 +71,5 @@ jobs:
 
       - name: Check push outputs
         run: |
-          touch ./dockerfile_policies/upodatedVersion.txt
+          touch ./dockerfile_policies/updatedVersion.txt
           echo "${{ steps.push_dockerfile_policies.outputs }}" >> ./dockerfile_policies/updatedVersion.txt
