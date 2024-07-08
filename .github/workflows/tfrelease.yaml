@@ -61,7 +61,7 @@ jobs:
       - name: Get new tag
         run: echo "tag=${{ steps.tag_version.outputs.new_tag }}" >> $GITHUB_ENV
 
-        name: Push Terraform polcies
+      - name: Push Terraform polcies
         id: push_policies
         run: |
           GIT_TAG=${{ env.tag }}
