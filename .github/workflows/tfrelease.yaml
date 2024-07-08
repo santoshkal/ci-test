@@ -24,17 +24,14 @@ jobs:
           go-version: "1.22"
           cache: false
       #
-      # - name: Fetch Initial version
-      #   id: init_version
-      #   run: |
-      #     ./.github/workflows/get_version.sh
-      #
-      # - name: Set Init-Version
-      #   id: set_init_version
-      #   run: echo "INIT_TAG=${{ steps.init_version.outputs.new_version }}" >> $GITHUB_ENV
-      #
-      # - name: Check Init Version
-      #   run: echo "Init tag ${{ env.INIT_TAG }}"
+      - name: Fetch Initial version
+        id: init_version
+        run: |
+          ./.github/workflows/get_version.sh
+
+      - name: Set Init-Version
+        id: set_init_version
+        run: echo "tag=${{ steps.init_version.outputs.new_version }}" >> $GITHUB_ENV
 
       - name: Install genval
         run: go install github.com/intelops/genval@main
@@ -46,22 +43,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Tag a release
-        id: tag_version
-        uses: anothrNick/github-tag-action@1.67.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # INITIAL_VERSION: ${{ env.INIT_TAG }}
-          DEFAULT_BRANCH: terraform-policies
-          WITH_V: true
-          RELEASE_BRANCHES: "terraform-policies"
-          DEFAULT_BUMP: "patch"
-          TAG_CONTEXT: branch
-
-      - name: Get new tag
-        run: echo "tag=${{ steps.tag_version.outputs.new_tag }}" >> $GITHUB_ENV
-
-      - name: Push Terraform polcies
+      - name: Push Dockerfile policies
         id: push_policies
         run: |
           GIT_TAG=${{ env.tag }}
@@ -70,6 +52,21 @@ jobs:
           --annotations="authors=santoshdts")
           echo "${GENVAL_OUTPUT}"
           echo "artifact_url=oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG}" >> $GITHUB_ENV
-      - name: Use artifact URL
-        run: |
-          echo "TERRAFORM_POLICIES=${{ env.artifact_url }}" >> ./terraform_policies/newversion.txt
+
+      - name: Write policy URL
+        uses: "DamianReeves/write-file-action@master"
+        with:
+          path: terraform_policies/newversion.txt
+          write-mode: overwrite
+          contents: |
+            # GitHub generated file
+            # Please do not modify or delete this file
+            ${{ env.artifact_url }}
+
+      - name: Commit & Push
+        uses: Andro999b/push@v1.3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+          force: true
+          message: "Overwritten by Github Actions - ${date}"

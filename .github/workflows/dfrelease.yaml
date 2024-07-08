@@ -32,9 +32,6 @@ jobs:
       - name: Set Init-Version
         id: set_init_version
         run: echo "tag=${{ steps.init_version.outputs.new_version }}" >> $GITHUB_ENV
-      #
-      # - name: Check Init Version
-      #   run: echo "Init tag ${{ env.INIT_TAG }}"
 
       - name: Install genval
         run: go install github.com/intelops/genval@main
@@ -45,21 +42,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Tag a release
-      #   id: tag_version
-      #   uses: anothrNick/github-tag-action@1.67.0
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     DEFAULT_BRANCH: dockerfile-policies
-      #     # INITIAL_VERSION: ${{ env.INIT_TAG }}
-      #     WITH_V: true
-      #     RELEASE_BRANCHES: "dockerfile-policies"
-      #     DEFAULT_BUMP: "patch"
-      #     TAG_CONTEXT: branch
-      #
-      # - name: Get new tag
-      #   run: echo "tag=${{ steps.tag_version.outputs.new_tag }}" >> $GITHUB_ENV
 
       - name: Push Dockerfile policies
         id: push_policies
@@ -77,7 +59,10 @@ jobs:
         with:
           path: dockerfile_policies/newversion.txt
           write-mode: overwrite
-          contents: ${{ env.artifact_url }}
+          contents: |
+            # GitHub generated file
+            # Please do not modify or delete this file
+            ${{ env.artifact_url }}
 
       - name: Commit & Push
         uses: Andro999b/push@v1.3
