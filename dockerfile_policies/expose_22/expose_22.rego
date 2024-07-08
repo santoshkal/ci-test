@@ -5,4 +5,4 @@ import rego.v1
 expose_22 if {
 ...
 }
-Thisimkl;sdn
+s is new write file action
