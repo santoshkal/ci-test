@@ -62,14 +62,15 @@ jobs:
       #   run: echo "tag=${{ steps.tag_version.outputs.new_tag }}" >> $GITHUB_ENV
 
       - name: Push Dockerfile policies
-        id: push_dockerfile_policies
+        id: push_policies
         run: |
-          GIT_TAG=${{ env.tag }} 
-          genval artifact push --reqinput ./dockerfile_policies/ \
-            --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
-            --annotations="authors=santoshdts"
+          GIT_TAG=${{ env.tag }}
+            GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
+          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
+          --annotations="authors=santoshdts")
+          echo "${GENVAL_OUTPUT}"
+          echo "artifact_url=oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG}" >> $GITHUB_ENV
 
-      - name: Check push outputs
+      - name: Use artifact URL
         run: |
-          touch ./dockerfile_policies/updatedVersion.txt
-          echo "${{ steps.push_dockerfile_policies.outputs }}" >> ./dockerfile_policies/updatedVersion.txt
+          echo "DOCKERFILE_POLICIES=${{ env.artifact_url }}" >> ./dockerfile_policies/newversion.txt
