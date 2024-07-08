@@ -51,8 +51,7 @@ jobs:
           --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
           --annotations="authors=santoshdts")
           echo "${GENVAL_OUTPUT}"
-          echo "artifact_url=oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG}" >> $GITHUB_ENV
-          echo "${{ env.artifact_url }}"
+          echo "DOCKERFILE_POLICIES=oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG}" >> $GITHUB_ENV
 
       - name: Write policy URL
         uses: "DamianReeves/write-file-action@master"
@@ -62,7 +61,7 @@ jobs:
           contents: |
             # GitHub generated file
             # Please do not modify or delete this file
-            ${{ env.artifact_url }}
+            ${{ env.DOCKERFILE_POLICIES }}
 
       - name: Commit & Push
         uses: Andro999b/push@v1.3
