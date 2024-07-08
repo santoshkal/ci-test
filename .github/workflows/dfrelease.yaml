@@ -74,13 +74,6 @@ jobs:
       - name: Write policy URL
         uses: "DamianReeves/write-file-action@master"
         with:
-          path: ./dockerfile_policies/newversion.txt
+          path: dockerfile_policies/newversion.txt
           write-mode: overwrite
-          contents: ${{ env.artifact_url }}
-
-      - name: Write policy URL to Disk
-        uses: "DamianReeves/write-file-action@master"
-        with:
-          path: ${{ env.home}}/ci-test/dockerfile_policies/newversion.txt
-          write-mode: append
           contents: ${{ env.artifact_url }}
