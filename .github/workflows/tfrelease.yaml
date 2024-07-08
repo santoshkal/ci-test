@@ -61,10 +61,15 @@ jobs:
       - name: Get new tag
         run: echo "tag=${{ steps.tag_version.outputs.new_tag }}" >> $GITHUB_ENV
 
-      - name: Push Terraform policies
-        id: push_terraform_policies
+        name: Push Terraform polcies
+        id: push_policies
         run: |
-          GIT_TAG=${{ env.tag }} 
-          genval artifact push --reqinput ./terraform_policies/ \
-            --dest oci://ghcr.io/santoshkal/ci-test/artifcts/terraform_policies:${GIT_TAG} \
-            --annotations="authors=santoshdts"
+          GIT_TAG=${{ env.tag }}
+            GENVAL_OUTPUT=$(genval artifact push --reqinput ./dockerfile_policies \
+          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG} \
+          --annotations="authors=santoshdts")
+          echo "${GENVAL_OUTPUT}"
+          echo "artifact_url=oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:${GIT_TAG}" >> $GITHUB_ENV
+      - name: Use artifact URL
+        run: |
+          echo "TERRAFORM_POLICIES=${{ env.artifact_url }}" >> ./terraform_policies/newversion.txt
