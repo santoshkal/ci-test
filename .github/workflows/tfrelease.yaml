@@ -30,7 +30,6 @@ jobs:
               - 'terraform_policies/**'
 
       - if: steps.changes.outputs.src == 'true'
-        id: Get initial version
         run: |
           echo "tag=$(./.github/workflows/fetch_version.sh ./.github/versions/terraform_version.env)" >> $GITHUB_ENV
 
