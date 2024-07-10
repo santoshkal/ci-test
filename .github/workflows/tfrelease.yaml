@@ -3,7 +3,7 @@ name: Terraform Workflow
 on:
   push:
     branches:
-      - terraform-policies
+      - main
     paths:
       - "terraform_policies/**"
 
