@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "terraform_policies/**"
 
 permissions:
   contents: write # needed to write releases
