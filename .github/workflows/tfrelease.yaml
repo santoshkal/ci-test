@@ -29,6 +29,11 @@ jobs:
         run: |
           ./.github/workflows/get_version.sh
 
+      - name: Write GitHub context to log
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
       - name: Set Init-Version
         id: set_init_version
         run: echo "tag=${{ steps.init_version.outputs.new_version }}" >> $GITHUB_ENV
