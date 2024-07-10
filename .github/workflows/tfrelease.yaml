@@ -1,19 +1,38 @@
-name: Terraform Workflow
+name: Release Workflow
 
 on:
   push:
     branches:
       - main
     paths:
-      - "terraform_policies/**"
+      - 'terraform_policies/**'
+      - 'dockerfile_policies/**'
 
 permissions:
   contents: write # needed to write releases
   id-token: write # needed for keyless signing
   packages: write # needed for ghcr access
+
 jobs:
   push-artifacts:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        policy-type: [
+        dockerfile_policies,
+        terraform_policies,
+        ]
+      include:
+        - policy-type: dockerfile_policies/**
+          path: ./dockerfile_policies
+          version-file: dockerfile_version.env
+          artifact-name: dockerfile_policies
+        - policy-type: terraform_policies
+          path: terraform_policies/**
+          version-file: terraform_version.env
+          artifact-name: terraform_policies
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,11 +48,11 @@ jobs:
         with:
           filters: |
             src:
-              - 'terraform_policies/**'
+              - ${{ matrix.path }}
 
       - if: steps.changes.outputs.src == 'true'
         run: |
-          echo "tag=$(./.github/workflows/get_version.sh ./.github/versions/terraform_version.env)" >> $GITHUB_ENV
+          echo "tag=$(./.github/get_version.sh ./.github/versions/${{ matrix.version-file }})" >> $GITHUB_ENV
 
       - name: Install genval
         run: go install github.com/intelops/genval@main
@@ -49,11 +68,11 @@ jobs:
         id: push_policies
         run: |
           GIT_TAG=${{ env.tag }}
-            GENVAL_OUTPUT=$(genval artifact push --reqinput ./terraform_policies \
-          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/terraform_policies:${GIT_TAG} \
+            GENVAL_OUTPUT=$(genval artifact push --reqinput ${{ matrix.path }} \
+          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.artifact-name }}:${GIT_TAG} \
           --annotations="authors=santoshdts")
           echo "${GENVAL_OUTPUT}"
-          echo "TERRAFORM_POLICIES=oci://ghcr.io/santoshkal/ci-test/artifcts/terraform_policies:${GIT_TAG}" >> $GITHUB_ENV
+          echo "${{ matrix.artifact-name | upper }}=oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.artifact-name }}:${GIT_TAG}" >> $GITHUB_ENV
 
       - name: Write policy URL
         uses: "DamianReeves/write-file-action@master"
@@ -63,7 +82,7 @@ jobs:
           contents: |
             # GitHub generated file
             # Please do not modify or delete this file
-            ${{ env.TERRAFORM_POLICIES }}
+            ${{ env[matrix.artifact-name | upper] }}
 
       - name: Commit & Push
         uses: Andro999b/push@v1.3
