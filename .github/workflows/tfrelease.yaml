@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "terraform_policies/**"
 
 permissions:
   contents: write # needed to write releases
@@ -24,19 +22,17 @@ jobs:
           go-version: "1.22"
           cache: false
       #
-      - name: Fetch Initial version
-        id: init_version
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            src:
+              - 'terraform_policies/**'
+
+      - if: steps.changes.outputs.src == 'true'
+        id: Get initial version
         run: |
-          ./.github/workflows/get_version.sh
-
-      - name: Write GitHub context to log
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
-
-      - name: Set Init-Version
-        id: set_init_version
-        run: echo "tag=${{ steps.init_version.outputs.new_version }}" >> $GITHUB_ENV
+          echo "tag=$(./.github/workflows/fetch_version.sh ./.github/versions/terraform_version.env)" >> $GITHUB_ENV
 
       - name: Install genval
         run: go install github.com/intelops/genval@main

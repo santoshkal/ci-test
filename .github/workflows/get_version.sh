@@ -1,16 +1,23 @@
 #!/bin/bash
 
-# Set the working directory
-WORKING_DIR="./dockerfile_policies"
+# Function to read version from a specified version file
+read_version() {
+  local version_file=$1
+  if [ -f "$version_file" ]; then
+    # Extract the version value from the file
+    local version_value=$(grep -oP '=(.*)$' "$version_file" | cut -d'=' -f2)
+    echo "$version_value"
+  else
+    echo "Version file not found: $version_file"
+    exit 1
+  fi
+}
 
-# Navigate to the directory containing the version.env file
-cd "$WORKING_DIR" || { echo "Failed to navigate to $WORKING_DIR"; exit 1; }
+# Check the input parameter
+if [ -z "$1" ]; then
+  echo "Usage: $0 <version_file>"
+  exit 1
+fi
 
-# Read the VERSION value from version.env
-VERSION=$(grep '^VERSION=' version.env | cut -d '=' -f 2)
-
-# Output the VERSION value for debugging
-echo "VERSION: $VERSION"
-
-# Set the output for GitHub Actions
-echo "::set-output name=new_version::$VERSION"
+# Call the function with the specified version file
+read_version "$1"
