@@ -31,7 +31,8 @@ jobs:
           base: main
           filters: |
             src:
-              - ${{ matrix.policy.path }}
+              - "terraform_policies/**"
+              - "dockerfile_policies/**"
 
   push-artifacts:
     needs: check-updates
