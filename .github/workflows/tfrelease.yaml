@@ -46,48 +46,6 @@ jobs:
   push-artifacts:
     runs-on: ubuntu-latest
     needs: check-updates
-    if: needs.check-updates.outputs.src == 'true'
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: "0"
-
-      - name: Install genval
-        run: go install github.com/intelops/genval@main
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set version tag
-        run: |
-          echo "tag=$(./.github/get_version.sh ./.github/versions/${{ matrix.policy.version-file }})" >> $GITHUB_ENV
-      - name: Push Dockerfile policies
-        id: push_policies
-        run: |
-          GIT_TAG=${{ env.tag }}
-          GENVAL_OUTPUT=$(genval artifact push --reqinput ${{ matrix.policy.path }} \
-          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.policy.artifact-name }}:${GIT_TAG} \
-          --annotations="authors=santoshdts")
-          echo "${GENVAL_OUTPUT}"
-          echo "${{ matrix.policy.output-file }}=oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.policy.artifact-name }}:${GIT_TAG}" >> $GITHUB_ENV
-      - name: Write policy URL
-        uses: "DamianReeves/write-file-action@master"
-        with:
-          path: ${{ matrix.policy.path }}/newversion.txt
-          write-mode: overwrite
-          contents: |
-            # GitHub generated file
-            # Please do not modify or delete this file
-            ${{ env[matrix.policy.output-file] }}
-      - name: Commit & Push
-        uses: Andro999b/push@v1.3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
-          force: true
-          message: "Overwritten by Github Actions - ${date}"
+    run: |
+      echo "Output=${{needs.check-updates.matrix.steps.changes.src}}"
+      echo "CHANGES=$${{needs.check-updates.outputs.src}}"
