@@ -40,15 +40,10 @@ jobs:
         id: changes
         uses: dorny/paths-filter@v3
         with:
+          base: main
           filters: |
             src:
               - ${{ matrix.policy.path }}
-
-      - name: Set output if changes detected
-        id: set-changes-output
-        run: |
-          echo "changes=${{ steps.changes.outputs.src }}" >> $GITHUB_ENV
-          echo "::set-output name=changes::${{ steps.changes.outputs.src }}"
 
   push-artifacts:
     runs-on: ubuntu-latest
