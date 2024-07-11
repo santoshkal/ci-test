@@ -72,10 +72,10 @@ jobs:
       - name: Set version tag
         run: |
           echo "tag=$(./.github/get_version.sh ./.github/versions/${{ matrix.policy.version-file }})" >> $GITHUB_ENV
+          echo "Changes=${{needs.check-updates.outputs.changed-parts}}"
       - name: Push Dockerfile policies
         id: push_policies
         run: |
-          if ${{ needs.check-updated.outputs.changed-parts }}
           GIT_TAG=${{ env.tag }}
           GENVAL_OUTPUT=$(genval artifact push --reqinput ${{ matrix.policy.path }} \
           --dest oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.policy.artifact-name }}:${GIT_TAG} \
