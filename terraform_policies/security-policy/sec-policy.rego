@@ -5,9 +5,5 @@ import rego.v1
 sec-policy if {
 ...
 
-Test matrix
-test another
-test
-test:w
-
+Updated
 }
