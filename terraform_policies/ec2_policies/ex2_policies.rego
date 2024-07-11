@@ -5,5 +5,5 @@ inport rego.v1
 ec2_policy if {
 ...
 Trigger
-test debugg
+test debugging
 
