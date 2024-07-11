@@ -43,6 +43,18 @@ jobs:
           filters: |
             src:
               - ${{ matrix.policy.path }}
+      - name: Set output if changes detected
+        id: set-changes-output
+        run: |
+          if [[ "${{ steps.changes.src }}" == 'true' ]]; then
+            echo "::set-output name=changes::true"
+          else
+            echo "::set-output name=changes::false"
+          fi
+
+      - name: ECHO
+        run: |
+          echo "${{ steps.set-changes-output }}"
   push-artifacts:
     runs-on: ubuntu-latest
     needs: check-updates
