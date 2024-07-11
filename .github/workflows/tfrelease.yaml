@@ -64,7 +64,6 @@ jobs:
 
       - name: Push Dockerfile policies
         id: push_policies
-      - if: steps.changes.outputs.src == 'true'
         run: |
           GIT_TAG=${{ env.tag }}
           GENVAL_OUTPUT=$(genval artifact push --reqinput ${{ check-updates.matrix.policy.path }} \
