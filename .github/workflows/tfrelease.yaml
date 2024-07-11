@@ -16,9 +16,6 @@ permissions:
 jobs:
   check-updates:
     runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.changes.outputs.src }}
-
     steps:
       - uses: actions/checkout@v4
         with:
@@ -33,6 +30,8 @@ jobs:
             src:
               - "terraform_policies/**"
               - "dockerfile_policies/**"
+    outputs:
+      changed-parts: ${{ steps.chenges.outputs.changes }}
 
   push-artifacts:
     needs: check-updates
@@ -52,11 +51,15 @@ jobs:
             artifact-name: terraform_policies
             output-file: TERRAFORM_POLICIES.env
 
+      if: ${{ (fromJson(needs.check-updates.changes.outputs.changes) == true }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: "0"
-
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+          cache: false
       - name: Install genval
         run: go install github.com/intelops/genval@main
 
@@ -73,6 +76,7 @@ jobs:
       - name: Push Dockerfile policies
         id: push_policies
         run: |
+          if ${{ needs.check-updated.outputs.changed-parts }}
           GIT_TAG=${{ env.tag }}
           GENVAL_OUTPUT=$(genval artifact push --reqinput ${{ matrix.policy.path }} \
           --dest oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.policy.artifact-name }}:${GIT_TAG} \
