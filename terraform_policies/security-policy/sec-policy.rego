@@ -5,5 +5,4 @@ import rego.v1
 sec-policy if {
 ...
 Debugging
-Updated
 }
