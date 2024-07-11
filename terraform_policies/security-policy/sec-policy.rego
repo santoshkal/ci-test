@@ -7,4 +7,5 @@ sec-policy if {
 
 Test matrix
 test another
+test
 }
