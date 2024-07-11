@@ -14,7 +14,7 @@ permissions:
   packages: write # needed for ghcr access
 
 jobs:
-  push-artifacts:
+  check-updates:
     runs-on: ubuntu-latest
 
     strategy:
@@ -36,11 +36,6 @@ jobs:
         with:
           fetch-depth: "0"
 
-      - uses: actions/setup-go@v4
-        with:
-          go-version: "1.22"
-          cache: false
-
       - uses: dorny/paths-filter@v3
         id: changes
         with:
@@ -48,10 +43,15 @@ jobs:
             src:
               - ${{ matrix.policy.path }}
 
-      - if: steps.changes.outputs.src == 'true'
-        run: |
-          echo "tag=$(./.github/get_version.sh ./.github/versions/${{ matrix.policy.version-file }})" >> $GITHUB_ENV
+  push-artifacts:
+    runs-on: ubuntu-latest
+    needs: check-updates
+    if: needs.steps.changes.outputs.src == 'true'
 
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: "0"
       - name: Install genval
         run: go install github.com/intelops/genval@main
 
@@ -64,13 +64,14 @@ jobs:
 
       - name: Push Dockerfile policies
         id: push_policies
+      - if: steps.changes.outputs.src == 'true'
         run: |
           GIT_TAG=${{ env.tag }}
-          GENVAL_OUTPUT=$(genval artifact push --reqinput ${{ matrix.policy.path }} \
-          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.policy.artifact-name }}:${GIT_TAG} \
+          GENVAL_OUTPUT=$(genval artifact push --reqinput ${{ check-updates.matrix.policy.path }} \
+          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/${{check-updates-matrix.policy.artifact-name }}:${GIT_TAG} \
           --annotations="authors=santoshdts")
           echo "${GENVAL_OUTPUT}"
-          echo "${{ matrix.policy.output-file }}=oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.policy.artifact-name }}:${GIT_TAG}" >> $GITHUB_ENV
+          echo "${{ matrix.policy.output-file }}=oci://ghcr.io/santoshkal/ci-test/artifcts/${{ check-updates-matrix.policy.artifact-name }}:${GIT_TAG}" >> $GITHUB_ENV
 
       - name: Write policy URL
         uses: "DamianReeves/write-file-action@master"
@@ -80,7 +81,7 @@ jobs:
           contents: |
             # GitHub generated file
             # Please do not modify or delete this file
-            ${{ env[matrix.policy.output-file] }}
+            ${{ env[check-updates.matrix.policy.output-file] }}
 
       - name: Commit & Push
         uses: Andro999b/push@v1.3
