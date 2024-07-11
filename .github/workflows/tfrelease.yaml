@@ -50,4 +50,4 @@ jobs:
       - name: echo changes
         run: |
           echo "Output=${{needs.check-updates.matrix.steps.changes.src}}"
-          echo "CHANGES=$${{needs.check-updates.outputs.src}}"
+          echo "CHANGES=$${{needs.check-updates.outputs.changes}}"
