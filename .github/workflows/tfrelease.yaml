@@ -37,9 +37,9 @@ jobs:
   push-artifacts:
     needs: check-updates
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        if: ${{ fromjson(needs.check-updates.outputs.matrix)  }}
         policy:
           - name: dockerfile_policies
             path: dockerfile_policies/**
