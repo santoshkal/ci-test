@@ -51,7 +51,6 @@ jobs:
             artifact-name: terraform_policies
             output-file: TERRAFORM_POLICIES.env
 
-      if: ${{ (fromJson(needs.check-updates.changes.outputs.changes) == true }}
     steps:
       - uses: actions/checkout@v4
         with:
