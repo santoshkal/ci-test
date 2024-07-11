@@ -61,5 +61,4 @@ jobs:
 
       - name: Debug outputs
         run: |
-          echo "Matrix Policy: ${{ toJSON(needs.check-updates.outputs) }}"
-          echo "Changes: ${{ needs.check-updates.outputs.changes }}"
+          echo "Matrix Policy: ${{ toJSON(needs.check-updates.steps.changes.outputs) }}"
