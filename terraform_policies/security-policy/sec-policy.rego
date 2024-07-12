@@ -6,4 +6,5 @@ sec-policy if {
 ...
 test trigger``
 conditional
-ficx
+fic
+remove base64
