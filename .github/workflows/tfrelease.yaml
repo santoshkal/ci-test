@@ -37,7 +37,7 @@ jobs:
             echo '${{ toJSON(matrix) }}'
           ) | jq -c .)
           echo "::set-output name=matrix::$matrix"
-        if: ${{ matrix.policy.path != ""}}
+        if: ${{ matrix.policy.path != ''}}
 
       - uses: dorny/paths-filter@v3
         id: changes
