@@ -60,6 +60,5 @@ jobs:
 
     steps:
       - name: Dump matrix context
-        id: matrix
         run: |
-          echo "${{ fromJson(needs.check-updates.outputs.matrix) }}"
+          echo "Matrix: ${{ needs.check-updates.outputs.matrix }}"

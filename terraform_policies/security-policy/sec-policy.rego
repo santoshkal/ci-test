@@ -5,7 +5,7 @@ import rego.v1
 sec-policy if {
 ...
 test trigger``
-Fix..00::
-Trigger...
-Fix``
-context}..
+0
+r
+x
+b}..
