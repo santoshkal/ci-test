@@ -30,16 +30,17 @@ jobs:
             artifact-name: terraform_policies
             output-file: TERRAFORM_POLICIES.env
     outputs:
-      matrix: ${{ steps.matrix.outputs.matrix }}
+      matrix: ${{ steps.set-matrix-output.outputs.matrix }}
 
     steps:
-      - run: |
+      - name: Set matrix output
+        id: set-matrix-output
+        run: |
           matrix=$((
             echo '${{ toJSON(matrix) }}'
           ) | jq -c .)
-          echo "$matrix" > matrix
           echo "::set-output name=matrix::$matrix"
-        id: matrix
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: "0"
@@ -61,4 +62,4 @@ jobs:
       - name: Dump matrix context
         id: matrix
         run: |
-          echo "{{fromJson(needs.check-updates.outputs.matrix)}}"
+          echo "${{ fromJson(needs.check-updates.outputs.matrix) }}"

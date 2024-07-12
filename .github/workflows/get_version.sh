@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Function to read version from a specified version file
+# read version from a specified version file
 read_version() {
   local version_file=$1
   if [ -f "$version_file" ]; then
