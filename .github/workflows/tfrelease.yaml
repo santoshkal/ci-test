@@ -59,4 +59,4 @@ jobs:
     steps:
       - name: Dump matrix context
         id: matrix
-        run: echo "$(cat */matrix | jq -c --slurp .)"
+        run: echo "$(cat ./matrix | jq -c --slurp .)"
