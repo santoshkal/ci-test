@@ -74,7 +74,7 @@ jobs:
       - name: Process each matrix entry
         run: |
           while IFS= read -r line; do
-            entry=$(echo "$line" | base64 --decode)
+            entry=$(echo "$line")
             name=$(echo "$entry" | jq -r '.name')
             path=$(echo "$entry" | jq -r '.path')
             version_file=$(echo "$entry" | jq -r '.version-file')
