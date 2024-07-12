@@ -62,27 +62,25 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: "0"
-
       - name: Install jq
         run: sudo apt-get install -y jq
 
       - name: Extract matrix values
         id: extract-matrix
         run: |
-          echo "${{ needs.check-updates.outputs.matrix }}" | jq -r '.policy ' > matrix_values.txt
+          echo '${{ needs.check-updates.outputs.matrix }}' | jq -c '.policy' > matrix_values.txt
 
       - name: Process each matrix entry
         run: |
           while IFS= read -r line; do
-            entry=$(echo "$line")
-            name=$(echo "$entry" | jq -r '.name')
-            path=$(echo "$entry" | jq -r '.path')
-            version_file=$(echo "$entry" | jq -r '.version-file')
-            artifact_name=$(echo "$entry" | jq -r '.artifact-name')
-            output_file=$(echo "$entry" | jq -r '.output-file')
-            
+            name=$(echo "$line" | jq -r '.name')
+            path=$(echo "$line" | jq -r '.path')
+            version_file=$(echo "$line" | jq -r '.version-file')
+            artifact_name=$(echo "$line" | jq -r '.artifact-name')
+            output_file=$(echo "$line" | jq -r '.output-file')
+
             echo "Processing $name"
-            
+
             # Checkout repository
             git checkout -b temp-branch
 
@@ -95,7 +93,7 @@ jobs:
             # Set version tag
             tag=$(./.github/get_version.sh ./.github/versions/${version_file})
             echo "tag=$tag" >> $GITHUB_ENV
-            
+
             # Push policies
             GIT_TAG=${tag}
             GENVAL_OUTPUT=$(genval artifact push --reqinput ${path} \
@@ -104,6 +102,7 @@ jobs:
             echo "${GENVAL_OUTPUT}"
             echo "${output_file}=oci://ghcr.io/santoshkal/ci-test/artifcts/${artifact_name}:${GIT_TAG}" >> $GITHUB_ENV
 
+          done < matrix_values.txt
           done < matrix_values.txt
       - name: Write policy URL
         uses: "DamianReeves/write-file-action@master"
