@@ -54,7 +54,9 @@ jobs:
   push-artifacts:
     runs-on: ubuntu-latest
     needs: [check-updates]
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
       - name: Dump matrix context
         id: matrix
-        run: echo 'matrix="$(cat */matrix | jq -c --slurp .)"'
+        run: echo "$(cat */matrix | jq -c --slurp .)"
