@@ -10,4 +10,5 @@ deny_root_user contains msg if {
     val2 != "root"
     val2 != "0"
     msg:= "Ensure Dockerfile does not use root user"
+    test:= "test"
 }

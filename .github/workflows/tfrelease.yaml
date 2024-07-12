@@ -69,7 +69,7 @@ jobs:
       - name: Extract matrix values
         id: extract-matrix
         run: |
-          echo "${{ needs.check-updates.outputs.matrix }}" | jq -r '.policy | @base64' > matrix_values.txt
+          echo "${{ needs.check-updates.outputs.matrix }}" | jq -r '.policy ' > matrix_values.txt
 
       - name: Process each matrix entry
         run: |
