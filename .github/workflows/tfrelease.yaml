@@ -29,6 +29,8 @@ jobs:
             version-file: terraform_version.env
             artifact-name: terraform_policies
             output-file: TERRAFORM_POLICIES.env
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
 
     steps:
       - run: |
@@ -38,8 +40,6 @@ jobs:
           echo "$matrix" > matrix
           echo "::set-output name=matrix::$matrix"
         id: matrix
-        outputs:
-          matrix: ${{ steps.matrix.outputs.matrix }}
       - uses: actions/checkout@v4
         with:
           fetch-depth: "0"
