@@ -43,15 +43,24 @@ jobs:
           filters: |
             src:
               - ${{ matrix.policy.path }}
-    outputs:
-      changed-parts: ${{ steps.chenges.outputs.changes }}
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
 
   push-artifacts:
     needs: check-updates
     runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{ needs.check-updates.outputs.matrix }}
     steps:
-      - run: |
-          echo "MATRIX=${{ matrix }}"
-          echo "CONTEXT=$GITHUB_CONTEXT"
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJson(needs.check-updates.strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJson(needs.check-updats.matrix) }}
+        run: echo "$MATRIX_CONTEXT"
