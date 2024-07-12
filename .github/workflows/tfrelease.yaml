@@ -50,7 +50,7 @@ jobs:
     needs: check-updates
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.check-updates.outputs.matrix) }}
+      matrix: ${{ needs.check-updates.outputs.matrix }}
     steps:
       - run: |
           echo "MATRIX=${{ matrix }}"
