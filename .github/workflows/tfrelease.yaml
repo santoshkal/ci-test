@@ -37,7 +37,6 @@ jobs:
             echo '${{ toJSON(matrix) }}'
           ) | jq -c .)
           echo "::set-output name=matrix::$matrix"
-        if: ${{ matrix.policy.path != ''}}
 
       - uses: dorny/paths-filter@v3
         id: changes
@@ -60,6 +59,7 @@ jobs:
 
       - name: Push Dockerfile policies
         id: push_policies
+        if: ${{ env.tag != '' }}
         run: |
           GIT_TAG=${{ env.tag }}
           GENVAL_OUTPUT=$(genval artifact push --reqinput ${{ matrix.policy.path }} \
