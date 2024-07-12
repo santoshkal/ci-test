@@ -62,7 +62,8 @@ jobs:
       matrix: ${{needs.check-updates.outputs.matrix}}
 
     steps:
-      - id: Debug Matrix values
+      - name: Debug Matrix values
+        id: debug-matrix-values
         run: |
           echo "MATRIX: ${{matrix.policy.name}}"
           echo "ACTUAL_MATRIX: ${{needs.check-updates.outputs.matrix}}"

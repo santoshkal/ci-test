@@ -7,3 +7,4 @@ sec-policy if {
 test trigger``
 conditional
 fic
+debug
