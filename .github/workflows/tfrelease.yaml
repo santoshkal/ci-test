@@ -59,7 +59,7 @@ jobs:
     needs: [check-updates]
     strategy:
       fail-fast: false
-      matrix: ${{needs.check-updates.outputs.matrix}}
+      matrix: ${{fromJson(needs.check-updates.outputs.matrix)}}
 
     steps:
       - name: Debug Matrix values
