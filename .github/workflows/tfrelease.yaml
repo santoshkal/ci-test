@@ -62,22 +62,30 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: "0"
+
       - name: Install jq
         run: sudo apt-get install -y jq
+
+      - name: Debug matrix output
+        run: |
+          echo 'Matrix output:'
+          echo '${{ needs.check-updates.outputs.matrix }}'
 
       - name: Extract matrix values
         id: extract-matrix
         run: |
-          echo '${{ needs.check-updates.outputs.matrix }}' | jq -c '.policy' > matrix_values.txt
+          echo '${{ needs.check-updates.outputs.matrix }}' | jq -c '.policy[]' > matrix_values.txt
 
       - name: Process each matrix entry
         run: |
           while IFS= read -r line; do
+            echo "Processing entry: $line"
+
             name=$(echo "$line" | jq -r '.name')
             path=$(echo "$line" | jq -r '.path')
-            version_file=$(echo "$line" | jq -r '.version-file')
-            artifact_name=$(echo "$line" | jq -r '.artifact-name')
-            output_file=$(echo "$line" | jq -r '.output-file')
+            version_file=$(echo "$line" | jq -r '.["version-file"]')
+            artifact_name=$(echo "$line" | jq -r '.["artifact-name"]')
+            output_file=$(echo "$line" | jq -r '.["output-file"]')
 
             echo "Processing $name"
 
@@ -102,9 +110,7 @@ jobs:
             echo "${GENVAL_OUTPUT}"
             echo "${output_file}=oci://ghcr.io/santoshkal/ci-test/artifcts/${artifact_name}:${GIT_TAG}" >> $GITHUB_ENV
 
-          done < matrix_values.txt
-          done < matrix_values.txt
-      - name: Write policy URL
+          done < matrix_values.txt      - name: Write policy URL
         uses: "DamianReeves/write-file-action@master"
         with:
           path: ${{ matrix.policy.path }}/newversion.txt
