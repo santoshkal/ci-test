@@ -57,71 +57,14 @@ jobs:
   push-artifacts:
     runs-on: ubuntu-latest
     needs: [check-updates]
+    strategy:
+      fail-fast: false
+      matrix: ${{needs.check-updates.outputs.matrix}}
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: "0"
-
-      - name: Install jq
-        run: sudo apt-get install -y jq
-
-      - name: Debug matrix output
+      - id: Debug Matrix values
         run: |
-          echo 'Matrix output:'
-          echo '${{ needs.check-updates.outputs.matrix }}'
-
-      - name: Extract matrix values
-        id: extract-matrix
-        run: |
-          echo '${{ needs.check-updates.outputs.matrix }}' | jq -c '.policy[]' > matrix_values.txt
-
-      - name: Process each matrix entry
-        run: |
-          while IFS= read -r line; do
-            name=$(echo "$line" | jq -r '.name')
-            path=$(echo "$line" | jq -r '.path')
-            version_file=$(echo "$line" | jq -r '.["version-file"]')
-            artifact_name=$(echo "$line" | jq -r '.["artifact-name"]')
-            output_file=$(echo "$line" | jq -r '.["output-file"]')
-
-            echo "Processing $name"
-
-            # Checkout repository
-            git checkout -b temp-branch
-
-            # Install genval
-            go install github.com/intelops/genval@main
-
-            # Login to GitHub Container Registry
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-
-            # Set version tag
-            tag=$(./.github/get_version.sh ./.github/versions/${version_file})
-            echo "tag=$tag" >> $GITHUB_ENV
-
-            # Push policies
-            GIT_TAG=${tag}
-            GENVAL_OUTPUT=$(genval artifact push --reqinput ${path} \
-            --dest oci://ghcr.io/santoshkal/ci-test/artifcts/${artifact_name}:${GIT_TAG} \
-            --annotations="authors=santoshdts")
-            echo "${GENVAL_OUTPUT}"
-            echo "${output_file}=oci://ghcr.io/santoshkal/ci-test/artifcts/${artifact_name}:${GIT_TAG}" >> $GITHUB_ENV
-
-          done < matrix_values.txt
-      - name: Write policy URL
-        uses: "DamianReeves/write-file-action@master"
-        with:
-          path: ${{ matrix.policy.path }}/newversion.txt
-          write-mode: overwrite
-          contents: |
-            # GitHub generated file
-            # Please do not modify or delete this file
-            ${{ env[matrix.policy.output-file] }}
-      - name: Commit & Push
-        uses: Andro999b/push@v1.3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
-          force: true
-          message: "Overwritten by Github Actions - ${date}"
+          echo "MATRIX: ${{matrix.policy.name}}"
+          echo "ACTUAL_MATRIX: ${{needs.check-updates.outputs.matrix}}"
+          echo "PATH: ${{needs.check-updates.outputs.matrix}}"
+          echo "JAON_PATH: ${{ matrix.policy.path }}"
