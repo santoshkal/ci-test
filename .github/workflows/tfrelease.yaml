@@ -110,7 +110,8 @@ jobs:
             echo "${GENVAL_OUTPUT}"
             echo "${output_file}=oci://ghcr.io/santoshkal/ci-test/artifcts/${artifact_name}:${GIT_TAG}" >> $GITHUB_ENV
 
-          done < matrix_values.txt      - name: Write policy URL
+          done < matrix_values.txt
+      - name: Write policy URL
         uses: "DamianReeves/write-file-action@master"
         with:
           path: ${{ matrix.policy.path }}/newversion.txt
