@@ -73,7 +73,7 @@ jobs:
         run: |
           echo "tag=$(./.github/get_version.sh ./.github/versions/${{ needs.check-updates.matrix.policy.version-file }})" >> $GITHUB_ENV
           echo "Changes=${{needs.check-updates.steps.changes.outputs.src}}"
-          echo "CONTEXT=${{GITHUB_CONTEXT }}"
+          echo "CONTEXT=$GITHUB_CONTEXT"
 
       - name: Push Dockerfile policies
         id: push_policies
