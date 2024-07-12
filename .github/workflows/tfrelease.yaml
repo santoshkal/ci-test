@@ -16,27 +16,6 @@ permissions:
 jobs:
   check-updates:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: "0"
-
-      - name: Check path updates
-        id: changes
-        uses: dorny/paths-filter@v3
-        with:
-          base: main
-          filters: |
-            src:
-              - "terraform_policies/**"
-              - "dockerfile_policies/**"
-    outputs:
-      changed-parts: ${{ steps.chenges.outputs.changes }}
-
-  push-artifacts:
-    needs: check-updates
-    runs-on: ubuntu-latest
-
     strategy:
       matrix:
         policy:
@@ -50,6 +29,27 @@ jobs:
             version-file: terraform_version.env
             artifact-name: terraform_policies
             output-file: TERRAFORM_POLICIES.env
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: "0"
+
+      - name: Check path updates
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          base: main
+          filters: |
+            src:
+              - ${{ matrix.policy.path }}
+    outputs:
+      changed-parts: ${{ steps.chenges.outputs.changes }}
+
+  push-artifacts:
+    needs: check-updates
+    if: ${{ needs.check-updates.steps.changes.outputs.src }}
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -71,17 +71,19 @@ jobs:
 
       - name: Set version tag
         run: |
-          echo "tag=$(./.github/get_version.sh ./.github/versions/${{ matrix.policy.version-file }})" >> $GITHUB_ENV
-          echo "Changes=${{needs.check-updates.outputs.src}}"
+          echo "tag=$(./.github/get_version.sh ./.github/versions/${{ needs.check-updates.matrix.policy.version-file }})" >> $GITHUB_ENV
+          echo "Changes=${{needs.check-updates.steps.changes.outputs.src}}"
+          echo "CONTEXT=${{GITHUB_CONTEXT }}"
+
       - name: Push Dockerfile policies
         id: push_policies
         run: |
           GIT_TAG=${{ env.tag }}
-          GENVAL_OUTPUT=$(genval artifact push --reqinput ${{ matrix.policy.path }} \
-          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.policy.artifact-name }}:${GIT_TAG} \
+          GENVAL_OUTPUT=$(genval artifact push --reqinput ${{ needs.check-updates.matrix.policy.path }} \
+          --dest oci://ghcr.io/santoshkal/ci-test/artifcts/${{ needs.check-updates.matrix.policy.artifact-name }}:${GIT_TAG} \
           --annotations="authors=santoshdts")
           echo "${GENVAL_OUTPUT}"
-          echo "${{ matrix.policy.output-file }}=oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.policy.artifact-name }}:${GIT_TAG}" >> $GITHUB_ENV
+          echo "${{ matrix.policy.output-file }}=oci://ghcr.io/santoshkal/ci-test/artifcts/${{ needs.check-updates.matrix.policy.artifact-name }}:${GIT_TAG}" >> $GITHUB_ENV
       - name: Write policy URL
         uses: "DamianReeves/write-file-action@master"
         with:
@@ -90,7 +92,7 @@ jobs:
           contents: |
             # GitHub generated file
             # Please do not modify or delete this file
-            ${{ env[matrix.policy.output-file] }}
+            ${{ env[needs.check-updates.matrix.policy.output-file] }}
       - name: Commit & Push
         uses: Andro999b/push@v1.3
         with:
