@@ -79,8 +79,6 @@ jobs:
       - name: Process each matrix entry
         run: |
           while IFS= read -r line; do
-            echo "Processing entry: $line"
-
             name=$(echo "$line" | jq -r '.name')
             path=$(echo "$line" | jq -r '.path')
             version_file=$(echo "$line" | jq -r '.["version-file"]')
