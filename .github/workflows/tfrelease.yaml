@@ -30,6 +30,9 @@ jobs:
             artifact-name: terraform_policies
             output-file: TERRAFORM_POLICIES.env
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: "0"
       - name: Set matrix output
         id: set-matrix-output
         run: |
@@ -38,22 +41,20 @@ jobs:
           ) | jq -c .)
           echo "::set-output name=matrix::$matrix"
 
-      - id: changes
+      - name: Path filter
+        id: changes
         uses: dorny/paths-filter@v3
         with:
           base: main
           filters: |
             src:
-              - ${{ matrix.policy.path }}
+              - '${{ matrix.policy.path }}'
 
-  push-artifacts:
-    runs-on: ubuntu-latest
-    needs: [check-updates]
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: "0"
+      # push-artifacts:
+      #   runs-on: ubuntu-latest
+      #   needs: [check-updates]
+      #
+      #   steps:
 
       - name: Conditionally set tag and install genval
         if: steps.changes.outputs.src == 'true'
