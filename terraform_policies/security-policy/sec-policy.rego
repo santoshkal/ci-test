@@ -6,4 +6,4 @@ sec-policy if {
 ...
 test trigger``
 conditional
-debugging
+debug
