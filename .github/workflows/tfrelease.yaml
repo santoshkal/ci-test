@@ -38,19 +38,31 @@ jobs:
           ) | jq -c .)
           echo "::set-output name=matrix::$matrix"
 
-      - uses: dorny/paths-filter@v3
-        id: changes
+      - id: changes
+        uses: dorny/paths-filter@v3
         with:
+          base: main
           filters: |
             src:
               - ${{ matrix.policy.path }}
-      - if: steps.changes.outputs.src == 'true'
+
+  push-artifacts:
+    runs-on: ubuntu-latest
+    needs: [check-updates]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: "0"
+
+      - name: Conditionally set tag and install genval
+        if: steps.changes.outputs.src == 'true'
         run: |
           echo "tag=$(./.github/get_version.sh ./.github/versions/${{ matrix.policy.version-file }})" >> $GITHUB_ENV
-      - name: Install genval
-        run: go install github.com/intelops/genval@main
+          go install github.com/intelops/genval@main
 
       - name: Login to GitHub Container Registry
+        if: steps.changes.outputs.src == 'true'
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
@@ -58,8 +70,8 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Dockerfile policies
+        if: steps.changes.outputs.src == 'true' && env.tag != ''
         id: push_policies
-        if: ${{ env.tag != '' }}
         run: |
           GIT_TAG=${{ env.tag }}
           GENVAL_OUTPUT=$(genval artifact push --reqinput ${{ matrix.policy.path }} \
@@ -67,8 +79,10 @@ jobs:
           --annotations="authors=santoshdts")
           echo "${GENVAL_OUTPUT}"
           echo "${{ matrix.policy.output-file }}=oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.policy.artifact-name }}:${GIT_TAG}" >> $GITHUB_ENV
+
       - name: Write policy URL
-        uses: "DamianReeves/write-file-action@master"
+        if: steps.changes.outputs.src == 'true'
+        uses: DamianReeves/write-file-action@master
         with:
           path: ${{ matrix.policy.path }}/newversion.txt
           write-mode: overwrite
@@ -76,10 +90,12 @@ jobs:
             # GitHub generated file
             # Please do not modify or delete this file
             ${{ env[matrix.policy.output-file] }}
+
       - name: Commit & Push
+        if: steps.changes.outputs.src == 'true'
         uses: Andro999b/push@v1.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
           force: true
-          message: "Overwritten by Github Actions - ${date}"
+          message: "Overwritten by GitHub Actions - ${{ github.run_number }}"
