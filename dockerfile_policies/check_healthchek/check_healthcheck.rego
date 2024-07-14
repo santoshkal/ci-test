@@ -5,5 +5,5 @@ import rego.v1
 
 check_healthcheck contains msg if {
   input[i].cmd == "healthcheck"
-  msg:= "Dockerfile uses 'HEALTHCHEC' instruction to check the health of a container"
+  msg:= "Ensure Dockerfile uses 'HEALTHCHEC' instruction to check the health of a container"
 }
