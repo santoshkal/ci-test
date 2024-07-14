@@ -1,0 +1,3 @@
+# GitHub generated file
+# Please do not modify or delete this file
+oci://ghcr.io/santoshkal/ci-test/artifcts/dockerfile_policies:v0.0.1
