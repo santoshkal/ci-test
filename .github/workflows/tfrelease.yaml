@@ -59,7 +59,7 @@ jobs:
       - name: Conditionally set tag and install genval
         if: steps.changes.outputs.src == 'true'
         run: |
-          echo "tag=$(./.github/get_version.sh ./.github/versions/${{ matrix.policy.version-file }})" >> $GITHUB_ENV
+          echo "tag=$(./.github/workflows/get_version.sh ./.github/versions/${{ matrix.policy.version-file }})" >> $GITHUB_ENV
           go install github.com/intelops/genval@main
 
       - name: Login to GitHub Container Registry
@@ -70,7 +70,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push Dockerfile policies
+      - name: Push $ {{ matrix.name }}
         if: steps.changes.outputs.src == 'true' && env.tag != ''
         id: push_policies
         run: |
