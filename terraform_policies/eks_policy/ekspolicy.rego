@@ -4,5 +4,4 @@ import rego.v1
 
 eks_policy is{
 ...
-Test
 }
