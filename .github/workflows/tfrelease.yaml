@@ -23,12 +23,12 @@ jobs:
             path: dockerfile_policies/**
             version-file: dockerfile_version.env
             artifact-name: dockerfile_policies
-            output-file: DOCKERFILE_POLICIES.env
+            output: DOCKERFILE_POLICIES
           - name: terraform_policies
             path: terraform_policies/**
             version-file: terraform_version.env
             artifact-name: terraform_policies
-            output-file: TERRAFORM_POLICIES.env
+            output: TERRAFORM_POLICIES
     steps:
       - uses: actions/checkout@v4
         with:
@@ -77,18 +77,18 @@ jobs:
           --dest oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.policy.artifact-name }}:${GIT_TAG} \
           --annotations="authors=santoshdts")
           echo "${GENVAL_OUTPUT}"
-          echo "${{ matrix.policy.output-file }}=oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.policy.artifact-name }}:${GIT_TAG}" >> $GITHUB_ENV
+          echo "${{ matrix.policy.output }}=oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.policy.artifact-name }}:${GIT_TAG}" >> $GITHUB_ENV
 
       - name: Write policy URL
         if: steps.changes.outputs.src == 'true'
         uses: DamianReeves/write-file-action@master
         with:
-          path: ${{ matrix.policy.path }}/newversion.txt
+          path: "./outputs/${{ matrix.policy.output }}.txt"
           write-mode: overwrite
           contents: |
             # GitHub generated file
             # Please do not modify or delete this file
-            ${{ env[matrix.policy.output-file] }}
+            ${{ env[matrix.policy.output] }}
 
       - name: Commit & Push
         if: steps.changes.outputs.src == 'true'
