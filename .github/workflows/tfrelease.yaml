@@ -77,18 +77,18 @@ jobs:
           --dest oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.policy.artifact-name }}:${GIT_TAG} \
           --annotations="authors=santoshdts")
           echo "${GENVAL_OUTPUT}"
-          echo "${{ matrix.policy.output }}=oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.policy.artifact-name }}:${GIT_TAG}" >> $GITHUB_ENV
+          echo "OUTPUT=oci://ghcr.io/santoshkal/ci-test/artifcts/${{ matrix.policy.artifact-name }}:${GIT_TAG}" >> $GITHUB_ENV
 
       - name: Write policy URL
         if: steps.changes.outputs.src == 'true'
         uses: DamianReeves/write-file-action@master
         with:
-          path: "./outputs/${{ matrix.policy.output }}.txt"
+          path: "./outputs/${{ matrix.policy.output }}.env"
           write-mode: overwrite
           contents: |
             # GitHub generated file
             # Please do not modify or delete this file
-            ${{ env[matrix.policy.output] }}
+            ${{ matrix.policy.output }}=$OUTPUT
 
       - name: Commit & Push
         if: steps.changes.outputs.src == 'true'
