@@ -2,4 +2,5 @@
   "name": "test",
   "test": "test1",
   "New-test": "New-test"
+  "trigger": "test"
 }

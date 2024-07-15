@@ -88,7 +88,7 @@ jobs:
           contents: |
             # GitHub generated file
             # Please do not modify or delete this file
-            ${{ matrix.policy.output }}=$OUTPUT
+            ${{ matrix.policy.output }}=${env.OUTPUT}
 
       - name: Commit & Push
         if: steps.changes.outputs.src == 'true'
