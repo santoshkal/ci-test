@@ -90,11 +90,23 @@ jobs:
             # Please do not modify or delete this file
             ${{ matrix.policy.output }}=${{env.OUTPUT}}
 
-      - name: Commit & Push
+      - name: Create temporary branch
         if: steps.changes.outputs.src == 'true'
-        uses: Andro999b/push@v1.3
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git checkout -b temp-branch-${{ github.run_id }}
+          git add .
+          git commit -m "Overwritten by GitHub Actions - ${{ github.run_number }}"
+          git push origin temp-branch-${{ github.run_id }}
+
+      - name: Create Pull Request
+        if: steps.changes.outputs.src == 'true'
+        uses: peter-evans/create-pull-request@v6.1.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
-          force: true
-          message: "Overwritten by GitHub Actions - ${{ github.run_number }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: temp-branch-${{ github.run_id }}
+          base: main
+          title: "Automated PR - Overwritten by GitHub Actions - ${{ github.run_number }}"
+          body: |
+            This pull request was created automatically by GitHub Actions.
