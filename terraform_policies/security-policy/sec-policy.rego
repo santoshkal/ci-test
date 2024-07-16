@@ -5,4 +5,4 @@ import rego.v1
 sec-policy if {
 ...
 test trigger``
-Fix auto PR
+use action to auto PR
