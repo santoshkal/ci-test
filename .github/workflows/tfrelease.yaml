@@ -101,5 +101,9 @@ jobs:
       - name: Create Pull request
         if: steps.changes.outputs.src == 'true'
         uses: peter-evans/create-pull-request@v6
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          commit-message: "OCI URL created by Github Action"
+          title: "Create OCI output file"
+          body: "Updates the OCI URL for the pushed pakcage"
+          branch: ${{ matrix.policy.name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
