@@ -5,4 +5,4 @@ import rego.v1
 sec-policy if {
 ...
 test trigger``
-auto PR
+Fix auto PR
