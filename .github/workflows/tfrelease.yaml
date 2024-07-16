@@ -98,12 +98,12 @@ jobs:
           branch: ${{ matrix.policy.name }}
           force: true
           message: "Overwritten by GitHub Actions - ${{ github.run_number }}"
-      - name: Create Pull request
-        if: steps.changes.outputs.src == 'true'
-        uses: peter-evans/create-pull-request@v6
-        with:
-          commit-message: "OCI URL created by Github Action"
-          title: "Create OCI output file"
-          body: "Updates the OCI URL for the pushed pakcage"
-          branch: ${{ matrix.policy.name }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Create Pull request
+      #   if: steps.changes.outputs.src == 'true'
+      #   uses: peter-evans/create-pull-request@v6
+      #   with:
+      #     commit-message: "OCI URL created by Github Action"
+      #     title: "Create OCI output file"
+      #     body: "Updates the OCI URL for the pushed pakcage"
+      #     branch: ${{ matrix.policy.name }}
+      #     token: ${{ secrets.GITHUB_TOKEN }}
