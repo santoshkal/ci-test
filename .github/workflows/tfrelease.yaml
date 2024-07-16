@@ -99,7 +99,8 @@ jobs:
           force: true
           message: "Overwritten by GitHub Actions - ${{ github.run_number }}"
       - name: Create Pull request
+        if: steps.changes.outputs.src == 'true'
         run: |
-          gh pr create -B main -H {{ matrix.policy.name }}--title 'OCI URL output file written by Github Action' --body 'Created by Github Action'
+          gh pr create -B main -H {{ matrix.policy.name }} --title 'OCI URL output file written by Github Action' --body 'Created by Github Action'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
