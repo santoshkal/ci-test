@@ -4,6 +4,4 @@ import rego.v1
 
 sec-policy if {
 ...
-test trigger``
-sFix e action to auto PR
-Raise PR from auto-tagging
+Delete from auto-tagging branch
