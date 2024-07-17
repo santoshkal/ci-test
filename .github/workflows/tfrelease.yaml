@@ -3,7 +3,7 @@ name: Release Workflow
 on:
   push:
     branches:
-      - auto-tagging
+      - main
     paths:
       - "terraform_policies/**"
       - "dockerfile_policies/**"
