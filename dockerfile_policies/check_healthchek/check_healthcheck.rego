@@ -7,4 +7,5 @@ check_healthcheck contains msg if {
   input[i].cmd == "healthcheck"
   msg:= "Ensure Dockerfile uses 'HEALTHCHEC' instruction to check the health of a container"
   test:= "Test raiseing PR"
+  "Trigger": "New PR from GH ACtions"
 }
