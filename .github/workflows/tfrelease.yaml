@@ -3,7 +3,7 @@ name: Release Workflow
 on:
   push:
     branches:
-      - main
+      - auto-tagging
     paths:
       - "terraform_policies/**"
       - "dockerfile_policies/**"
@@ -95,7 +95,7 @@ jobs:
         uses: Andro999b/push@v1.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ matrix.policy.name }}
+          branch: auto-tagging
           force: true
           message: "Overwritten by GitHub Actions - ${{ github.run_number }}"
       # - name: Create Pull request
