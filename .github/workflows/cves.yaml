@@ -48,3 +48,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           write-comment: true
           sarif-file: "./${{ matrix.image.name }}-attestations/${{ matrix.image.name }}-cves.json"
+
+      - name: Debug Docker Secret
+        run: echo "DOCKER_SECRET is set"
+        if: ${{ secrets.DOCKER_SECRET != '' }}
