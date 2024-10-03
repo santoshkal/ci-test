@@ -48,9 +48,9 @@ jobs:
         with:
           command: cves
           image: "santoshkal/ollama-base:v0.3.0"
-          github-token: ${{ secrets.GHCR_PAT }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           write-comment: true
-          sarif-file: "./${{ matrix.image.name }}-attestations/ollama-base-cves.json"
+          sarif-file: "./ansible-attestations/ollama-base-cves.json"
 
       - name: Stage files
         run: |
