@@ -17,14 +17,8 @@ permissions:
 
 jobs:
   publish-insights:
-    env:
-      REGISTRY: ghcr.io
-      ORG: open-containers
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        image:
-          - name: ansible
+    # env:
+    #   REGISTRY: ghcr.io
 
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
@@ -48,23 +42,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      - name: Collect Provenance
-        run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.ORG }}/${{ matrix.image.name }}:v1.0.0 \
-            --format '{{ json .Provenance.SLSA }}' > ./${{ matrix.image.name }}-attestations/${{ matrix.image.name }}-provenance.json
-
-      - name: Collect SBOM
-        run: |
-          docker buildx imagetools inspect ${{env.REGISTRY}}/${{ env.ORG }}/${{ matrix.image.name }}:v1.0.0 \
-            --format '{{ json .SBOM.SPDX }}' > ./${{ matrix.image.name }}-attestations/${{ matrix.image.name }}-sbom.json
       - name: Docker Scout
         uses: docker/scout-action@v1
         with:
           command: cves
-          image: ${{ env.REGISTRY }}/${{ env.ORG }}/${{ matrix.image.name }}:v1.0.0
+          image: "santoshkal/ollama-base:v0.3.0"
           github-token: ${{ secrets.GITHUB_TOKEN }}
           write-comment: true
-          sarif-file: "./${{ matrix.image.name }}-attestations/${{ matrix.image.name }}-cves.json"
+          sarif-file: "./${{ matrix.image.name }}-attestations/ollama-base-cves.json"
 
       - name: Stage files
         run: |
