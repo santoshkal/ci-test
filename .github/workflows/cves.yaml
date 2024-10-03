@@ -38,7 +38,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_PAT}}
+          password: ${{ secrets.DOCKER_SECRET}}
 
       - name: Docker Scout
         uses: docker/scout-action@v1
