@@ -2,11 +2,11 @@ name: image-insights
 
 on:
   # The schedule will trigger at 0900 UTC timezone
-  # schedule:
-  #   - cron: "0 08 * * *"
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: "0 08 * * *"
+  # push:
+  #   branches:
+  #     - main
 
 permissions:
   packages: write
@@ -37,9 +37,26 @@ jobs:
         uses: docker/login-action@v3.3.0
         with:
           registry: ghcr.io
-          username: "santoshkal"
-          password: ${{ secrets.DOCKER_SECRET}}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT}}
 
+      - name: Cache Docker layers
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Collect Provenance
+        run: |
+          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.ORG }}/${{ matrix.image.name }}:v1.0.0 \
+            --format '{{ json .Provenance.SLSA }}' > ./${{ matrix.image.name }}-attestations/${{ matrix.image.name }}-provenance.json
+
+      - name: Collect SBOM
+        run: |
+          docker buildx imagetools inspect ${{env.REGISTRY}}/${{ env.ORG }}/${{ matrix.image.name }}:v1.0.0 \
+            --format '{{ json .SBOM.SPDX }}' > ./${{ matrix.image.name }}-attestations/${{ matrix.image.name }}-sbom.json
       - name: Docker Scout
         uses: docker/scout-action@v1
         with:
@@ -49,6 +66,15 @@ jobs:
           write-comment: true
           sarif-file: "./${{ matrix.image.name }}-attestations/${{ matrix.image.name }}-cves.json"
 
-      - name: Debug Docker Secret
-        run: echo "DOCKER_SECRET is set"
-        if: ${{ secrets.DOCKER_SECRET != '' }}
+      - name: Stage files
+        run: |
+          git add .
+
+      - uses: planetscale/ghcommit-action@v0.1.6
+        with:
+          commit_message: "Add Provenance files"
+          repo: ${{ github.repository }}
+          branch: "main"
+          # branch: ${{ matrix.image.name }}-${{ github.run_number }}
+        env:
+          GITHUB_TOKEN: ${{secrets.GHCR_PAT}}
