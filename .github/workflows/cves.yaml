@@ -51,7 +51,8 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           write-comment: true
           sarif-file: "./ansible-attestations/ollama-base-cves.json"
-
+          dockerhub-user: santoshkal
+          dockerhub-password: ${{ secrets.DOCKER_SECRET }}
       - name: Stage files
         run: |
           git add .
