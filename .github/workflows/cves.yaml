@@ -48,7 +48,7 @@ jobs:
         with:
           command: cves
           image: "ghcr.io/open-containers/ansible:v1.0.0"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GHCR_PAT }}
           write-comment: true
           sarif-file: "./ansible-attestations/ollama-base-cves.json"
           dockerhub-user: santoshkal
