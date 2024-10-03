@@ -17,6 +17,7 @@ permissions:
 
 jobs:
   publish-insights:
+    runs-on: ubuntu-latest
     # env:
     #   REGISTRY: ghcr.io
 
