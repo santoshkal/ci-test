@@ -47,7 +47,7 @@ jobs:
         uses: docker/scout-action@v1
         with:
           command: cves
-          image: "santoshkal/ollama-base:v0.3.0"
+          image: "ghcr.io/open-containers/ansible:v1.0.0"
           github-token: ${{ secrets.GITHUB_TOKEN }}
           write-comment: true
           sarif-file: "./ansible-attestations/ollama-base-cves.json"
